@@ -2,6 +2,7 @@ package org.yxm.component.easyswiperefreshlayout;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -152,6 +153,7 @@ public class EasySwipeRefreshLayout extends FrameLayout {
             }
             // 方向滑动到顶部，释放这次滑动事件
             if (getScrollY() >= 0) {
+              updateScrollState(STATE_RESET);
               releaseTouchEvent(ev);
               // 释放motion event，这里有必要做这个动作，因为down事件传递有延迟
               scrollTo(0, 0);
@@ -162,13 +164,15 @@ public class EasySwipeRefreshLayout extends FrameLayout {
         break;
       case MotionEvent.ACTION_UP:
         if (getState() == STATE_RELEASE_TO_REFRESH) {
-          smoothScrollToHeaderHeight();
           updateScrollState(STATE_REFRESHING);
+          smoothScrollToHeaderHeight();
+          if (mRefreshListener != null) {
+            mRefreshListener.onRefresing();
+          }
         } else if (getState() == STATE_PULLING) {
-          smoothScrollToReset();
           updateScrollState(STATE_RESET);
+          smoothScrollToReset();
         }
-        break;
     }
     return super.dispatchTouchEvent(ev);
   }
@@ -176,6 +180,7 @@ public class EasySwipeRefreshLayout extends FrameLayout {
   @Override
   public void computeScroll() {
     if (mScroller.computeScrollOffset()) {
+      Log.d(TAG, "computeScroll: "+mScroller.getCurrY());
       scrollTo(0, mScroller.getCurrY());
       invalidate();
     }
@@ -202,11 +207,6 @@ public class EasySwipeRefreshLayout extends FrameLayout {
     if (mScrollStateListener != null) {
       mScrollStateListener.state(state);
       mScrollStateListener.scrollDuration(mHeaderHeight, getScrollY());
-    }
-    if (state == STATE_REFRESHING) {
-      if (mRefreshListener != null) {
-        mRefreshListener.onRefresing();
-      }
     }
   }
 
