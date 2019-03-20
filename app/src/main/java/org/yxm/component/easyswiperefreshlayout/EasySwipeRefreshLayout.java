@@ -1,6 +1,10 @@
 package org.yxm.component.easyswiperefreshlayout;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
+import android.support.v7.widget.RecyclerView.Recycler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -121,6 +125,7 @@ public class EasySwipeRefreshLayout extends FrameLayout {
     switch (ev.getAction()) {
       case MotionEvent.ACTION_DOWN:
         mLastY = touchY;
+        mIsBeginDrag = false;
         break;
       case MotionEvent.ACTION_MOVE:
         int dy = touchY - mLastY;
@@ -158,6 +163,7 @@ public class EasySwipeRefreshLayout extends FrameLayout {
             }
             // 方向滑动到顶部，释放这次滑动事件
             if (getScrollY() >= 0) {
+              mIsBeginDrag = false;
               updateScrollState(STATE_RESET);
               releaseTouchEvent(ev);
               // 释放motion event，这里有必要做这个动作，因为down事件传递有延迟
@@ -186,7 +192,7 @@ public class EasySwipeRefreshLayout extends FrameLayout {
   public boolean onInterceptTouchEvent(MotionEvent ev) {
     // 这里添加判断是为了防止up事件传递给mTargetView形成点击
     // 不能直接在dispatch中return掉up事件，效果不好
-    if (mIsBeginDrag){
+    if (mIsBeginDrag) {
       mIsBeginDrag = false;
       return true;
     }
@@ -206,8 +212,15 @@ public class EasySwipeRefreshLayout extends FrameLayout {
    */
   private boolean shouldInterceptScrollEvent() {
     if (mTargetView instanceof ListView) {
-      View firstVisibleItemView = ((ListView) mTargetView).getChildAt(0);
-      if (firstVisibleItemView != null && firstVisibleItemView.getTop() == 0) {
+      View firstView = ((ListView) mTargetView).getChildAt(0);
+      if (firstView != null && firstView.getTop() == 0) {
+        return true;
+      }
+    } else if (mTargetView instanceof RecyclerView) {
+      RecyclerView recyclerView = (RecyclerView) mTargetView;
+      LayoutManager linearLayoutManager = recyclerView.getLayoutManager();
+      View firstView = linearLayoutManager.findViewByPosition(0);
+      if (firstView != null && firstView.getTop() == 0) {
         return true;
       }
     }

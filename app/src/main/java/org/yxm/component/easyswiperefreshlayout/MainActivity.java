@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -30,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
     for (int i = 0; i < 20; i++) {
       datas.add("item:" + i);
     }
+
+//    RecyclerView rv = findViewById(R.id.recyclerview);
+//    final MyRecyclerAdapter adapter = new MyRecyclerAdapter(datas);
+//    rv.setLayoutManager(new LinearLayoutManager(this));
+//    rv.setAdapter(adapter);
+
     ListView listView = findViewById(R.id.listview);
     listView.setOnItemClickListener(new OnItemClickListener() {
       @Override
@@ -44,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
     refreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override
       public void onRefresing() {
-//        adapter.insert(PREFIXES[new Random().nextInt(PREFIXES.length)], 0);
-//        adapter.notifyDataSetChanged();
+        adapter.insert(PREFIXES[new Random().nextInt(PREFIXES.length)], 0);
+        adapter.notifyDataSetChanged();
         new Handler().postDelayed(new Runnable() {
           @Override
           public void run() {
