@@ -43,6 +43,9 @@ public class EasySwipeRefreshLayout extends FrameLayout {
   private Scroller mScroller;
   /** 当前滑动的状态 */
   private int mState;
+  /** 是否已经开始拖拽 */
+  private boolean mIsBeginDrag = false;
+
 
   /**
    * 获取滑动状态接口，在滑动过程中可以持续拿到变化 可以在这里接口中做头部的动画
@@ -114,20 +117,21 @@ public class EasySwipeRefreshLayout extends FrameLayout {
 
   @Override
   public boolean dispatchTouchEvent(MotionEvent ev) {
+    int touchY = (int) ev.getY();
     switch (ev.getAction()) {
       case MotionEvent.ACTION_DOWN:
-        mLastY = (int) ev.getY();
+        mLastY = touchY;
         break;
       case MotionEvent.ACTION_MOVE:
-        int y = (int) ev.getY();
-        int dy = y - mLastY;
-        mLastY = y;
+        int dy = touchY - mLastY;
+        mLastY = touchY;
         if (getState() == STATE_REFRESHING) {
           break;
         }
         if (dy > 0) {
           // 向下滑动，判断是否滑到顶部，需要拦截
           if (shouldInterceptScrollEvent()) {
+            mIsBeginDrag = true;
             // 如果mScroller弹性回退动画正在执行，直接停止
             if (!mScroller.isFinished()) {
               mScroller.abortAnimation();
@@ -139,11 +143,12 @@ public class EasySwipeRefreshLayout extends FrameLayout {
             } else {
               updateScrollState(STATE_PULLING);
             }
-            return false;
+            return true;
           }
         } else {
           // 向上滑动，但是当前出于下拉状态
           if (getState() == STATE_PULLING || getState() == STATE_RELEASE_TO_REFRESH) {
+            mIsBeginDrag = true;
             scrollBy(0, -dy);
             // 滑动距离到达header高度
             if (Math.abs(getScrollY()) >= mHeaderHeight) {
@@ -158,7 +163,7 @@ public class EasySwipeRefreshLayout extends FrameLayout {
               // 释放motion event，这里有必要做这个动作，因为down事件传递有延迟
               scrollTo(0, 0);
             }
-            return false;
+            return true;
           }
         }
         break;
@@ -178,9 +183,19 @@ public class EasySwipeRefreshLayout extends FrameLayout {
   }
 
   @Override
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+    // 这里添加判断是为了防止up事件传递给mTargetView形成点击
+    // 不能直接在dispatch中return掉up事件，效果不好
+    if (mIsBeginDrag){
+      mIsBeginDrag = false;
+      return true;
+    }
+    return super.onInterceptTouchEvent(ev);
+  }
+
+  @Override
   public void computeScroll() {
     if (mScroller.computeScrollOffset()) {
-      Log.d(TAG, "computeScroll: "+mScroller.getCurrY());
       scrollTo(0, mScroller.getCurrY());
       invalidate();
     }

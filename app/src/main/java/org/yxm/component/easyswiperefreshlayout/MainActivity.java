@@ -1,12 +1,10 @@
 package org.yxm.component.easyswiperefreshlayout;
 
-import android.content.Context;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -46,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     refreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override
       public void onRefresing() {
-        adapter.insert(PREFIXES[new Random().nextInt(PREFIXES.length)], 0);
-        adapter.notifyDataSetChanged();
+//        adapter.insert(PREFIXES[new Random().nextInt(PREFIXES.length)], 0);
+//        adapter.notifyDataSetChanged();
         new Handler().postDelayed(new Runnable() {
           @Override
           public void run() {

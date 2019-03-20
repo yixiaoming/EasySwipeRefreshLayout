@@ -35,7 +35,7 @@ public class MyRefreshLayout extends EasySwipeRefreshLayout {
     mScrollStateListener = new ScrollStateLitener() {
       @Override
       public void scrollDuration(int headerHeight, int scrollY) {
-        Log.d(TAG, "scrollDuration: height:" + headerHeight + ", scrollY:" + scrollY);
+//        Log.d(TAG, "scrollDuration: height:" + headerHeight + ", scrollY:" + scrollY);
       }
 
       @Override
