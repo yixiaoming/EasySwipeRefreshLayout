@@ -7,29 +7,41 @@
   android:layout_height="match_parent"
   tools:context=".MainActivity">
 
-  <org.yxm.component.easyswiperefreshlayout.MyRefreshLayout
-  android:id="@+id/refresh_layout"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  <!--<org.yxm.component.easyswiperefreshlayout.MyRefreshLayout-->
+  <!--android:id="@+id/refresh_layout"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent">-->
 
-  <ListView
-  android:id="@+id/listview"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"></ListView>
+  <!--<ListView-->
+  <!--android:id="@+id/listview"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"></ListView>-->
 
-  </org.yxm.component.easyswiperefreshlayout.MyRefreshLayout>
+  <!--</org.yxm.component.easyswiperefreshlayout.MyRefreshLayout>-->
 
 
   <!--<org.yxm.component.easyswiperefreshlayout.MyRefreshLayout-->
-    <!--android:id="@+id/refresh_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
+  <!--android:id="@+id/refresh_layout"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent">-->
 
-    <!--<android.support.v7.widget.RecyclerView-->
-      <!--android:id="@+id/recyclerview"-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="match_parent"/>-->
+  <!--<android.support.v7.widget.RecyclerView-->
+  <!--android:id="@+id/recyclerview"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"/>-->
 
   <!--</org.yxm.component.easyswiperefreshlayout.MyRefreshLayout>-->
+
+  <org.yxm.component.easyswiperefreshlayout.EasyRefreshLayout
+    android:id="@+id/refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/recyclerview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+
+  </org.yxm.component.easyswiperefreshlayout.EasyRefreshLayout>
 
 </android.support.constraint.ConstraintLayout>
