@@ -30,6 +30,7 @@ public class EasyRefreshLayout extends ViewGroup
   private View mTargetView;
   private NestedScrollingParentHelper mNestedScrollParentHelper;
   private NestedScrollingChildHelper mNestedScrollChildHelper;
+  private int mLastTouchY;
   private int mTouchSlop;
   private Scroller mScroller;
   private OnScrollStateChangeListener mProcessListener;
@@ -106,6 +107,65 @@ public class EasyRefreshLayout extends ViewGroup
       }
     }
   }
+
+//  @Override
+//  public boolean onInterceptTouchEvent(MotionEvent ev) {
+////    if (!(mTargetView instanceof AbsListView)) {
+////      return super.onInterceptTouchEvent(ev);
+////    }
+//    int y = (int) ev.getY();
+//    Log.d(TAG, "onInterceptTouchEvent: " + ev.getAction() + ",   " + y);
+//    boolean intercept = false;
+//    switch (ev.getAction()) {
+//      case MotionEvent.ACTION_DOWN:
+//        mLastTouchY = y;
+//        if (!mScroller.isFinished()) {
+//          mScroller.abortAnimation();
+//        }
+//        break;
+//      case MotionEvent.ACTION_MOVE:
+//        int dy = y - mLastTouchY;
+//        // 向下拉动
+//        if (dy > 0) {
+//          if (!canChildScrollDown()) {
+//            intercept = true;
+//          }
+//        }
+//        break;
+//    }
+//    mLastTouchY = y;
+//    return intercept;
+//  }
+//
+//  @Override
+//  public boolean onTouchEvent(MotionEvent ev) {
+//    int y = (int) ev.getY();
+//    Log.d(TAG, "onTouchEvent: " + ev.getAction() + ",   " + y);
+//    switch (ev.getAction()) {
+//      case MotionEvent.ACTION_MOVE:
+//        int dy = y - mLastTouchY;
+//        if (getScrollY() > 0 && canChildScrollUp()) {
+//          releaseTouchEvent(ev);
+//          scrollTo(0, 0);
+//          return false;
+//        }
+//        scrollBy(0, -dy);
+//        computeScrollState(false);
+//        break;
+//      case MotionEvent.ACTION_UP:
+//        smoothScrollTo(getScrollY(), 0);
+//        computeScrollState(true);
+//        break;
+//    }
+//
+//    mLastTouchY = y;
+//    return super.onTouchEvent(ev);
+//  }
+
+//  private void releaseTouchEvent(MotionEvent ev) {
+//    ev.setAction(MotionEvent.ACTION_DOWN);
+//    dispatchTouchEvent(ev);
+//  }
 
   public void setOnRefreshListener(OnRefreshListener listener) {
     mRefreshListener = listener;
@@ -200,6 +260,9 @@ public class EasyRefreshLayout extends ViewGroup
       }
       if (mState != REFRESHING) {
         computeScrollState(false);
+      } else {
+        // 向上滑动，如果正在refreshing的话，隐藏headerview
+        mIsStartNestedScroll = true;
       }
       consumed[1] = realComsmedY;
       dispatchNestedPreScroll(dx, dy, consumed, null);

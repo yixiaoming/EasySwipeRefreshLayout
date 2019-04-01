@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,38 +31,10 @@ public class MainActivity extends AppCompatActivity {
       datas.add("item:" + i);
     }
 
-    RecyclerView rv = findViewById(R.id.recyclerview);
-    final MyRecyclerAdapter adapter = new MyRecyclerAdapter(datas);
-    rv.setLayoutManager(new LinearLayoutManager(this));
-    rv.setAdapter(adapter);
-
-//    ListView listView = findViewById(R.id.listview);
-//    listView.setOnItemClickListener(new OnItemClickListener() {
-//      @Override
-//      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        Toast.makeText(MainActivity.this, "position:"+position, Toast.LENGTH_SHORT).show();
-//      }
-//    });
-//    final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.itemview, datas);
-//    listView.setAdapter(adapter);
-
-//    final MyRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
-//    refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-//      @Override
-//      public void onRefresing() {
-//
-//        new Handler().postDelayed(new Runnable() {
-//          @Override
-//          public void run() {
-//            adapter.insert(PREFIXES[new Random().nextInt(PREFIXES.length)], 0);
-//            adapter.notifyDataSetChanged();
-//            refreshLayout.stopRefresing();
-//          }
-//        }, 10 * 1000);
-//      }
-//    });
-
     final EasyRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
+    ListView listView = findViewById(R.id.listview);
+    final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.itemview, datas);
+    listView.setAdapter(adapter);
     refreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override
       public void onRefresh() {
@@ -69,13 +45,21 @@ public class MainActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
             refreshLayout.stopRefresing();
           }
-        }, 10 * 1000);
+        }, 3 * 1000);
       }
     });
+    listView.setOnItemClickListener(new OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(MainActivity.this, "click:" + position, Toast.LENGTH_SHORT).show();
+      }
+    });
+
+
+//    final EasyRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
 //    refreshLayout.setOnRefreshListener(new OnRefreshListener() {
 //      @Override
-//      public void onRefresing() {
-//
+//      public void onRefresh() {
 //        new Handler().postDelayed(new Runnable() {
 //          @Override
 //          public void run() {
