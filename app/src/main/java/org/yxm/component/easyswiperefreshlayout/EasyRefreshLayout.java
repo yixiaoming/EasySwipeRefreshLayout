@@ -26,7 +26,7 @@ public class EasyRefreshLayout extends ViewGroup
   public static final int RELEASE_TO_REFRESH = 2;
   public static final int REFRESHING = 3;
 
-  private View mHeaderView;
+  protected View mHeaderView;
   private View mTargetView;
   private NestedScrollingParentHelper mNestedScrollParentHelper;
   private NestedScrollingChildHelper mNestedScrollChildHelper;
@@ -39,6 +39,8 @@ public class EasyRefreshLayout extends ViewGroup
   public interface OnScrollStateChangeListener {
 
     void onScrollStateChange(int state);
+
+    void onScrollProcess(int headerHeight, int scrollY);
   }
 
   public interface OnRefreshListener {
@@ -74,11 +76,19 @@ public class EasyRefreshLayout extends ViewGroup
   protected void onFinishInflate() {
     super.onFinishInflate();
     mTargetView = getChildAt(0);
+    buildHeaderView();
+  }
+
+  protected void buildHeaderView() {
     if (mHeaderView == null) {
       mHeaderView = new DefaultHeaderLayout(getContext());
-      mProcessListener = (OnScrollStateChangeListener) mHeaderView;
+      setProcessListener((OnScrollStateChangeListener) mHeaderView);
       addView(mHeaderView, 0);
     }
+  }
+
+  public void setProcessListener(OnScrollStateChangeListener listener) {
+    mProcessListener = listener;
   }
 
   @Override
@@ -281,17 +291,21 @@ public class EasyRefreshLayout extends ViewGroup
     if (mProcessListener != null) {
       if (-getScrollY() >= mHeaderView.getHeight()) {
         mState = RELEASE_TO_REFRESH;
-      } else if (-getScrollY() >= 0 && -getScrollY() <= mHeaderView.getHeight()) {
+      } else if (-getScrollY() > 0 && -getScrollY() < mHeaderView.getHeight()) {
         mState = PULL_TO_REFRESH;
       }
       if (isRelease && mState == RELEASE_TO_REFRESH) {
         mState = REFRESHING;
         mRefreshListener.onRefresh();
       }
+      mProcessListener.onScrollProcess(mHeaderView.getHeight(), Math.abs(getScrollY()));
       mProcessListener.onScrollStateChange(mState);
     }
   }
 
+  /**
+   * 默认header，只显示下拉进度
+   */
   private static class DefaultHeaderLayout extends FrameLayout implements
       OnScrollStateChangeListener {
 
@@ -306,12 +320,11 @@ public class EasyRefreshLayout extends ViewGroup
       MarginLayoutParams params = new MarginLayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
           FrameLayout.LayoutParams.WRAP_CONTENT);
       setLayoutParams(params);
-      setPadding(0, 20, 0, 20);
 
       mScrollStateText = new TextView(getContext());
       mScrollStateText.setTextSize(20);
       mScrollStateText.setGravity(Gravity.CENTER);
-      mScrollStateText.setPadding(0, 20, 0, 20);
+      mScrollStateText.setPadding(0, 80, 0, 80);
       addView(mScrollStateText);
     }
 
@@ -324,6 +337,10 @@ public class EasyRefreshLayout extends ViewGroup
       } else if (state == REFRESHING) {
         mScrollStateText.setText("正在刷新");
       }
+    }
+
+    @Override
+    public void onScrollProcess(int headerHeight, int scrollY) {
     }
   }
 }

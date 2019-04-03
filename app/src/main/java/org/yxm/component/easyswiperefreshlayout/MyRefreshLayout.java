@@ -1,13 +1,19 @@
 package org.yxm.component.easyswiperefreshlayout;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.v7.view.menu.MenuPresenter;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.TextView;
+import com.airbnb.lottie.LottieAnimationView;
+import org.yxm.component.easyswiperefreshlayout.EasyRefreshLayout.OnScrollStateChangeListener;
 
-public class MyRefreshLayout extends EasySwipeRefreshLayout {
+public class MyRefreshLayout extends EasyRefreshLayout implements OnScrollStateChangeListener {
 
+  private LottieAnimationView mPulldownAnim;
+  private LottieAnimationView mRefreshAnim;
 
   public MyRefreshLayout(Context context) {
     super(context);
@@ -30,28 +36,46 @@ public class MyRefreshLayout extends EasySwipeRefreshLayout {
         R.layout.header_view, this, false
     );
     addView(mHeaderView);
-    final TextView mScrollStateText = mHeaderView.findViewById(R.id.pull_notify);
+    setProcessListener(this);
+    mPulldownAnim = findViewById(R.id.pulldown_anim);
+    mPulldownAnim.setAnimation("fly.json");
 
-    mScrollStateListener = new ScrollStateLitener() {
-      @Override
-      public void scrollDuration(int headerHeight, int scrollY) {
-//        Log.d(TAG, "scrollDuration: height:" + headerHeight + ", scrollY:" + scrollY);
-      }
+    mRefreshAnim = findViewById(R.id.refresh_anim);
+    mRefreshAnim.setAnimation("circle.json");
+    mRefreshAnim.setRepeatCount(ValueAnimator.INFINITE);
+  }
 
-      @Override
-      public void state(int state) {
-        switch (state) {
-          case EasySwipeRefreshLayout.STATE_PULLING:
-            mScrollStateText.setText("下拉刷新");
-            break;
-          case EasySwipeRefreshLayout.STATE_RELEASE_TO_REFRESH:
-            mScrollStateText.setText("松开可刷新");
-            break;
-          case EasySwipeRefreshLayout.STATE_REFRESHING:
-            mScrollStateText.setText("正在刷新");
-            break;
+  @Override
+  public void onScrollStateChange(int state) {
+    if (state == REFRESHING) {
+      mPulldownAnim.resumeAnimation();
+      mPulldownAnim.addAnimatorListener(new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+          super.onAnimationEnd(animation);
+          mPulldownAnim.pauseAnimation();
+          mPulldownAnim.setVisibility(GONE);
+          mRefreshAnim.playAnimation();
+          mRefreshAnim.setVisibility(VISIBLE);
         }
-      }
-    };
+      });
+    }
+  }
+
+  @Override
+  public void stopRefresing() {
+    super.stopRefresing();
+    mRefreshAnim.setProgress(0);
+    mPulldownAnim.setProgress(0);
+  }
+
+  @Override
+  public void onScrollProcess(int headerHeight, int scrollY) {
+    float process = (float) (scrollY * 1.0 / headerHeight);
+    process = Math.min(0.5f, process);
+    mPulldownAnim.setVisibility(VISIBLE);
+    mPulldownAnim.setProgress(process);
+
+    mRefreshAnim.setVisibility(GONE);
   }
 }

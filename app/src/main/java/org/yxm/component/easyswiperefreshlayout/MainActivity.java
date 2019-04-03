@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-
 //    final EasyRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
 //    refreshLayout.setOnRefreshListener(new OnRefreshListener() {
 //      @Override
@@ -68,6 +67,22 @@ public class MainActivity extends AppCompatActivity {
 //            refreshLayout.stopRefresing();
 //          }
 //        }, 10 * 1000);
+//      }
+//    });
+
+//    final EasyRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
+//    final WebView webView = findViewById(R.id.webview);
+//    webView.loadUrl("https://www.baidu.com/");
+//    refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+//      @Override
+//      public void onRefresh() {
+//        new Handler().postDelayed(new Runnable() {
+//          @Override
+//          public void run() {
+//            webView.reload();
+//            refreshLayout.stopRefresing();
+//          }
+//        }, 3 * 1000);
 //      }
 //    });
   }
