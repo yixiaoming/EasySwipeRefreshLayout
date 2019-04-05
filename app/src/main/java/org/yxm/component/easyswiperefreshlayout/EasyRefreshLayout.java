@@ -8,13 +8,10 @@ import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Scroller;
-import android.widget.TextView;
 
 public class EasyRefreshLayout extends ViewGroup
     implements NestedScrollingParent, NestedScrollingChild {
@@ -30,26 +27,11 @@ public class EasyRefreshLayout extends ViewGroup
   private View mTargetView;
   private NestedScrollingParentHelper mNestedScrollParentHelper;
   private NestedScrollingChildHelper mNestedScrollChildHelper;
-  private int mLastTouchY;
   private int mTouchSlop;
   private Scroller mScroller;
   private OnScrollStateChangeListener mProcessListener;
   private OnRefreshListener mRefreshListener;
-
-  public interface OnScrollStateChangeListener {
-
-    void onScrollStateChange(int state);
-
-    void onScrollProcess(int headerHeight, int scrollY);
-  }
-
-  public interface OnRefreshListener {
-
-    void onRefresh();
-  }
-
-  private int mState;
-
+  private int mState = RESET;
   private boolean mIsStartNestedScroll = false;
 
   public EasyRefreshLayout(Context context) {
@@ -79,16 +61,29 @@ public class EasyRefreshLayout extends ViewGroup
     buildHeaderView();
   }
 
+  /**
+   * 自定义HeaderView重写该方法
+   */
   protected void buildHeaderView() {
     if (mHeaderView == null) {
-      mHeaderView = new DefaultHeaderLayout(getContext());
+      mHeaderView = new DefaultHeaderView(getContext());
       setProcessListener((OnScrollStateChangeListener) mHeaderView);
       addView(mHeaderView, 0);
     }
   }
 
+  /**
+   * 设置下拉process回调
+   */
   public void setProcessListener(OnScrollStateChangeListener listener) {
     mProcessListener = listener;
+  }
+
+  /**
+   * 设置刷新开始litener
+   */
+  public void setOnRefreshListener(OnRefreshListener listener) {
+    mRefreshListener = listener;
   }
 
   @Override
@@ -118,80 +113,11 @@ public class EasyRefreshLayout extends ViewGroup
     }
   }
 
-//  @Override
-//  public boolean onInterceptTouchEvent(MotionEvent ev) {
-////    if (!(mTargetView instanceof AbsListView)) {
-////      return super.onInterceptTouchEvent(ev);
-////    }
-//    int y = (int) ev.getY();
-//    Log.d(TAG, "onInterceptTouchEvent: " + ev.getAction() + ",   " + y);
-//    boolean intercept = false;
-//    switch (ev.getAction()) {
-//      case MotionEvent.ACTION_DOWN:
-//        mLastTouchY = y;
-//        if (!mScroller.isFinished()) {
-//          mScroller.abortAnimation();
-//        }
-//        break;
-//      case MotionEvent.ACTION_MOVE:
-//        int dy = y - mLastTouchY;
-//        // 向下拉动
-//        if (dy > 0) {
-//          if (!canChildScrollDown()) {
-//            intercept = true;
-//          }
-//        }
-//        break;
-//    }
-//    mLastTouchY = y;
-//    return intercept;
-//  }
-//
-//  @Override
-//  public boolean onTouchEvent(MotionEvent ev) {
-//    int y = (int) ev.getY();
-//    Log.d(TAG, "onTouchEvent: " + ev.getAction() + ",   " + y);
-//    switch (ev.getAction()) {
-//      case MotionEvent.ACTION_MOVE:
-//        int dy = y - mLastTouchY;
-//        if (getScrollY() > 0 && canChildScrollUp()) {
-//          releaseTouchEvent(ev);
-//          scrollTo(0, 0);
-//          return false;
-//        }
-//        scrollBy(0, -dy);
-//        computeScrollState(false);
-//        break;
-//      case MotionEvent.ACTION_UP:
-//        smoothScrollTo(getScrollY(), 0);
-//        computeScrollState(true);
-//        break;
-//    }
-//
-//    mLastTouchY = y;
-//    return super.onTouchEvent(ev);
-//  }
-
-//  private void releaseTouchEvent(MotionEvent ev) {
-//    ev.setAction(MotionEvent.ACTION_DOWN);
-//    dispatchTouchEvent(ev);
-//  }
-
-  public void setOnRefreshListener(OnRefreshListener listener) {
-    mRefreshListener = listener;
-  }
-
-  public void stopRefresing() {
-    smoothScrollToReset();
-    mState = RESET;
-  }
-
+  /**
+   * 判断targetview是否还可以下拉
+   */
   private boolean canChildScrollDown() {
     return mTargetView.canScrollVertically(-1);
-  }
-
-  public boolean canChildScrollUp() {
-    return mTargetView.canScrollVertically(1);
   }
 
   private void smoothScrollTo(int from, int to) {
@@ -205,6 +131,11 @@ public class EasyRefreshLayout extends ViewGroup
 
   private void smoothScrollToHeader() {
     smoothScrollTo(getScrollY(), -mHeaderView.getHeight());
+  }
+
+  public void stopRefresing() {
+    smoothScrollToReset();
+    mState = RESET;
   }
 
   @Override
@@ -303,44 +234,15 @@ public class EasyRefreshLayout extends ViewGroup
     }
   }
 
-  /**
-   * 默认header，只显示下拉进度
-   */
-  private static class DefaultHeaderLayout extends FrameLayout implements
-      OnScrollStateChangeListener {
+  public interface OnScrollStateChangeListener {
 
-    private TextView mScrollStateText;
+    void onScrollStateChange(int state);
 
-    public DefaultHeaderLayout(Context context) {
-      super(context);
-      init();
-    }
+    void onScrollProcess(int headerHeight, int scrollY);
+  }
 
-    private void init() {
-      MarginLayoutParams params = new MarginLayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-          FrameLayout.LayoutParams.WRAP_CONTENT);
-      setLayoutParams(params);
+  public interface OnRefreshListener {
 
-      mScrollStateText = new TextView(getContext());
-      mScrollStateText.setTextSize(20);
-      mScrollStateText.setGravity(Gravity.CENTER);
-      mScrollStateText.setPadding(0, 80, 0, 80);
-      addView(mScrollStateText);
-    }
-
-    @Override
-    public void onScrollStateChange(int state) {
-      if (state == PULL_TO_REFRESH) {
-        mScrollStateText.setText("下拉刷新");
-      } else if (state == RELEASE_TO_REFRESH) {
-        mScrollStateText.setText("松开开始刷新");
-      } else if (state == REFRESHING) {
-        mScrollStateText.setText("正在刷新");
-      }
-    }
-
-    @Override
-    public void onScrollProcess(int headerHeight, int scrollY) {
-    }
+    void onRefresh();
   }
 }
