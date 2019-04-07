@@ -112,49 +112,49 @@
     </android.support.design.widget.CollapsingToolbarLayout>
   </android.support.design.widget.AppBarLayout>
 
-  <org.yxm.component.easyswiperefreshlayout.MyRefreshLayout
+  <org.yxm.component.easyswiperefreshlayout.EasyRefreshLayout
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <android.support.v7.widget.RecyclerView
+    <org.yxm.component.easyswiperefreshlayout.MyRecyclerView
       android:id="@+id/recyclerview"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      />
-  </org.yxm.component.easyswiperefreshlayout.MyRefreshLayout>
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+  </org.yxm.component.easyswiperefreshlayout.EasyRefreshLayout>
 
 
   <!--<org.yxm.component.easyswiperefreshlayout.MyRefreshLayout-->
-    <!--android:id="@+id/refresh_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">>-->
+  <!--android:id="@+id/refresh_layout"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">>-->
 
-    <!--<android.support.v4.widget.NestedScrollView-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="match_parent">-->
-      <!--<org.yxm.component.easyswiperefreshlayout.NestedListView-->
-        <!--android:id="@+id/listview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"/>-->
-    <!--</android.support.v4.widget.NestedScrollView>-->
+  <!--<android.support.v4.widget.NestedScrollView-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent">-->
+  <!--<org.yxm.component.easyswiperefreshlayout.NestedListView-->
+  <!--android:id="@+id/listview"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"/>-->
+  <!--</android.support.v4.widget.NestedScrollView>-->
   <!--</org.yxm.component.easyswiperefreshlayout.MyRefreshLayout>-->
 
   <!--<android.support.v4.widget.SwipeRefreshLayout-->
-    <!--android:id="@+id/refresh_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">>-->
+  <!--android:id="@+id/refresh_layout"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">>-->
 
-    <!--<android.support.v4.widget.NestedScrollView-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="match_parent">-->
-      <!--<org.yxm.component.easyswiperefreshlayout.NestedListView-->
-        <!--android:id="@+id/listview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"/>-->
-    <!--</android.support.v4.widget.NestedScrollView>-->
+  <!--<android.support.v4.widget.NestedScrollView-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent">-->
+  <!--<org.yxm.component.easyswiperefreshlayout.NestedListView-->
+  <!--android:id="@+id/listview"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"/>-->
+  <!--</android.support.v4.widget.NestedScrollView>-->
   <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </android.support.design.widget.CoordinatorLayout>

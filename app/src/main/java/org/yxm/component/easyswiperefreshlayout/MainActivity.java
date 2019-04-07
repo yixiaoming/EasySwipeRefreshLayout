@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     final EasyRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
     final MyRecyclerAdapter adapter = new MyRecyclerAdapter(datas);
-    RecyclerView recyclerView = findViewById(R.id.recyclerview);
+    MyRecyclerView recyclerView = findViewById(R.id.recyclerview);
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     refreshLayout.setOnRefreshListener(new EasyRefreshLayout.OnRefreshListener() {
