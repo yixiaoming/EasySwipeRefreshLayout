@@ -2,20 +2,24 @@ package org.yxm.component.easyswiperefreshlayout;
 
 import android.content.Context;
 import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ListViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Scroller;
 
+/**
+ * 下拉刷新LayoutView
+ * 支持自定义HeaderView，重写buildHeaderView方法
+ * 要获取下拉状态做动画，需要设置 OnScrollStateChangeListener
+ *
+ * @author yixiaoming
+ */
 public class EasyRefreshLayout extends ViewGroup
     implements NestedScrollingParent, NestedScrollingChild {
 
@@ -29,18 +33,15 @@ public class EasyRefreshLayout extends ViewGroup
   protected View mHeaderView;
   private View mTargetView;
   private NestedScrollingParentHelper mNestedScrollingParentHelper;
-  private NestedScrollingChildHelper mNestedScrollingChildHelper;
-  private int mTouchSlop;
   private Scroller mScroller;
   private OnScrollStateChangeListener mProcessListener;
   private OnRefreshListener mOnRefreshListener;
   private int mState = RESET;
-  private boolean mIsStartNestedScroll = false;
 
-  private int mLastTouchY = 0;
-  private int mLastTouchX = 0;
-  private int[] mConsumed = new int[2];
+  private int[] mParentConsumed = new int[2];
   private int[] mParentOffsetInWindow = new int[2];
+
+  private int mTotalUnconsumed = 0;
 
   /** 刷新状态process获取接口，可做动画 */
   public interface OnScrollStateChangeListener {
@@ -71,8 +72,6 @@ public class EasyRefreshLayout extends ViewGroup
 
   private void init() {
     mNestedScrollingParentHelper = new NestedScrollingParentHelper(this);
-    mNestedScrollingChildHelper = new NestedScrollingChildHelper(this);
-    mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     mScroller = new Scroller(getContext());
     setNestedScrollingEnabled(true);
   }
@@ -146,13 +145,6 @@ public class EasyRefreshLayout extends ViewGroup
     return mTargetView.canScrollVertically(-1);
   }
 
-  /**
-   * 判断targetview是否可以上滑动
-   */
-  private boolean canChildScrollUp() {
-    return mTargetView.canScrollVertically(1);
-  }
-
   private void smoothScrollTo(int from, int to) {
     mScroller.startScroll(0, from, 0, to - from, 500);
     invalidate();
@@ -166,7 +158,7 @@ public class EasyRefreshLayout extends ViewGroup
     smoothScrollTo(getScrollY(), -mHeaderView.getHeight());
   }
 
-  public void stopRefresing() {
+  public void stopRefreshing() {
     smoothScrollToReset();
     mState = RESET;
   }
@@ -179,7 +171,15 @@ public class EasyRefreshLayout extends ViewGroup
     }
   }
 
+  /**
+   * 处理滑动拖成中状态的修改
+   *
+   * @param isRelease touch事件release标志
+   */
   private void computeScrollState(boolean isRelease) {
+    if (mState == REFRESHING) {
+      return;
+    }
     if (mProcessListener != null) {
       if (-getScrollY() >= mHeaderView.getHeight()) {
         mState = RELEASE_TO_REFRESH;
@@ -197,50 +197,7 @@ public class EasyRefreshLayout extends ViewGroup
     }
   }
 
-  //<editor-fold desc="View自身touch event事件传递">
-  @Override
-  public boolean dispatchTouchEvent(MotionEvent ev) {
-    int y = (int) ev.getY();
-    int dy = y - mLastTouchY;
-    switch (ev.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        Log.w(TAG, "dispatchTouchEvent: down");
-        break;
-      case MotionEvent.ACTION_MOVE:
-        Log.w(TAG, "dispatchTouchEvent: move:" + dy);
-        break;
-      case MotionEvent.ACTION_UP:
-        Log.w(TAG, "dispatchTouchEvent: up");
-        break;
-    }
-    return super.dispatchTouchEvent(ev);
-  }
-
-  @Override
-  public boolean onInterceptTouchEvent(MotionEvent ev) {
-    int x = (int) ev.getX();
-    int y = (int) ev.getY();
-    int dx = x - mLastTouchX;
-    int dy = y - mLastTouchY;
-    switch (ev.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        Log.w(TAG, "onInterceptTouchEvent: down");
-        break;
-      case MotionEvent.ACTION_MOVE:
-        Log.w(TAG, "onInterceptTouchEvent: move:" + dy);
-        break;
-      case MotionEvent.ACTION_UP:
-        Log.w(TAG, "onInterceptTouchEvent: up");
-        break;
-    }
-    mLastTouchX = x;
-    mLastTouchY = y;
-    return super.onInterceptTouchEvent(ev);
-  }
-  //</editor-fold>
-
   //<editor-fold desc="NestedScrollingParent相关">
-
   @Override
   public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
     Log.d(TAG, "onStartNestedScroll: " + nestedScrollAxes);
@@ -250,59 +207,35 @@ public class EasyRefreshLayout extends ViewGroup
 
   @Override
   public void onNestedScrollAccepted(View child, View target, int axes) {
-    Log.d(TAG, "onNestedScrollAccepted: " + axes);
     mNestedScrollingParentHelper.onNestedScrollAccepted(child, target, axes);
     startNestedScroll(axes & ViewCompat.SCROLL_AXIS_VERTICAL);
+    mTotalUnconsumed = 0;
   }
 
   @Override
   public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-    Log.d(TAG, "onNestedPreScroll: " + dy + "," + getScrollY());
-    // 当前正在向上滑动，并且header还在展现，优先隐藏header
-    int selfConsumeDy = 0;
-    if (dy > 0 && getScrollY() < 0) {
-      selfConsumeDy = dy + getScrollY() < 0 ? dy : -getScrollY();
-      scrollBy(0, selfConsumeDy);
-      computeScrollState(false);
+    if (dy > 0 && mTotalUnconsumed > 0) {
+      if (dy > mTotalUnconsumed) {
+        consumed[1] = dy - mTotalUnconsumed;
+        mTotalUnconsumed = 0;
+      } else {
+        mTotalUnconsumed -= dy;
+        consumed[1] = dy;
+      }
+      // 解决快速方向滑动导致整个layout都向上滑动问题
+      if (dy + getScrollY() <= 0) {
+        scrollBy(0, dy);
+      } else {
+        scrollBy(0, -getScrollY());
+      }
     }
-    dispatchNestedPreScroll(dx, dy - selfConsumeDy, mConsumed, null);
-    Log.d(TAG, "onNestedPreScroll: " + dy + "," + mConsumed[1]);
-
-    consumed[0] = mConsumed[0];
-    consumed[1] = mConsumed[1] + selfConsumeDy;
-
-    // 向下滑动，并且targetview无法再向下滑动
-//    if (dy < 0 && !canChildScrollDown()) {
-//      if (!mScroller.isFinished()) {
-//        mScroller.abortAnimation();
-//      }
-//      mIsStartNestedScroll = true;
-//      scrollBy(0, dy);
-//      if (mState != REFRESHING) {
-//        computeScrollState(false);
-//      }
-//    }
-//    // 向上滑动，但是此时header还未隐藏，先滑动header消耗dy
-//    else if (dy > 0 && getScrollY() < 0) {
-//      int realComsmedY = 0;
-//      if (dy + getScrollY() <= 0) {
-//        scrollBy(0, dy);
-//        realComsmedY = dy;
-//      } else {
-//        // 解决快速方向滑动导致整个layout都向上滑动问题
-//        scrollBy(0, -getScrollY());
-//        realComsmedY = -getScrollY();
-//      }
-//      if (mState != REFRESHING) {
-//        computeScrollState(false);
-//      } else {
-//        // 向上滑动，如果正在refreshing的话，隐藏headerview
-//        mIsStartNestedScroll = true;
-//      }
-//      consumed[1] = realComsmedY;
-//      dispatchNestedPreScroll(dx, dy, consumed, null);
-//    }
+    final int[] parentConsumed = mParentConsumed;
+    if (dispatchNestedPreScroll(dx - consumed[0], dy - consumed[1], parentConsumed, null)) {
+      consumed[0] += parentConsumed[0];
+      consumed[1] += parentConsumed[1];
+    }
   }
+
 
   @Override
   public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed,
@@ -310,10 +243,9 @@ public class EasyRefreshLayout extends ViewGroup
     // 下拉时，先问parent需要消耗的touch事件
     dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
         mParentOffsetInWindow);
-    Log.d(TAG,
-        "onNestedScroll: " + dyConsumed + "," + dyUnconsumed + "," + mParentOffsetInWindow[1]);
     int dy = dyUnconsumed + mParentOffsetInWindow[1];
     if (dy < 0 && !canChildScrollDown()) {
+      mTotalUnconsumed += Math.abs(dy);
       scrollBy(0, dy);
       computeScrollState(false);
     }
@@ -321,16 +253,18 @@ public class EasyRefreshLayout extends ViewGroup
 
   @Override
   public void onStopNestedScroll(View child) {
-    Log.d(TAG, "onStopNestedScroll: ");
-    super.onStopNestedScroll(child);
-    if (-getScrollY() >= mHeaderView.getHeight()) {
-      smoothScrollToHeader();
-      if (mOnRefreshListener != null) {
-        mOnRefreshListener.onRefresh();
+    mNestedScrollingParentHelper.onStopNestedScroll(child);
+    if (mTotalUnconsumed > 0) {
+      if (-getScrollY() >= mHeaderView.getHeight()) {
+        computeScrollState(true);
+        smoothScrollToHeader();
+      } else if (getScrollY() < 0 && -getScrollY() < mHeaderView.getHeight()) {
+        computeScrollState(true);
+        smoothScrollToReset();
       }
-    } else if (getScrollY() < 0 && -getScrollY() < mHeaderView.getHeight()) {
-      smoothScrollToReset();
+      mTotalUnconsumed = 0;
     }
+    stopNestedScroll();
   }
   //<editor-fold>
 }

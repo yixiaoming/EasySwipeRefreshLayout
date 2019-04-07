@@ -24,60 +24,60 @@ public class MyRecyclerView extends RecyclerView {
     super(context, attrs);
   }
 
-  @Override
-  public boolean dispatchTouchEvent(MotionEvent ev) {
-    int y = (int) ev.getY();
-    int dy = y - mLastTouchY;
-    switch (ev.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        Log.e(TAG, "recyclerview dispatchTouchEvent: down");
-        break;
-      case MotionEvent.ACTION_MOVE:
-        Log.e(TAG, "recyclerview dispatchTouchEvent: move:" + dy);
-        break;
-      case MotionEvent.ACTION_UP:
-        Log.e(TAG, "recyclerview dispatchTouchEvent: up");
-        break;
-    }
-    return super.dispatchTouchEvent(ev);
-  }
-
-  @Override
-  public boolean onInterceptTouchEvent(MotionEvent ev) {
-    int y = (int) ev.getY();
-    int dy = y - mLastTouchY;
-    switch (ev.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        Log.e(TAG, "recyclerview onInterceptTouchEvent: down");
-        break;
-      case MotionEvent.ACTION_MOVE:
-        Log.e(TAG, "recyclerview onInterceptTouchEvent: move:" + dy);
-        break;
-      case MotionEvent.ACTION_UP:
-        Log.e(TAG, "recyclerview onInterceptTouchEvent: up");
-        break;
-    }
-    return super.onInterceptTouchEvent(ev);
-  }
-
-  @Override
-  public boolean onTouchEvent(MotionEvent ev) {
-    int y = (int) ev.getY();
-    int dy = y - mLastTouchY;
-    switch (ev.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        Log.e(TAG, "recyclerview onTouchEvent: down");
-        break;
-      case MotionEvent.ACTION_MOVE:
-        Log.e(TAG, "recyclerview onTouchEvent: move:" + dy);
-        break;
-      case MotionEvent.ACTION_UP:
-        Log.e(TAG, "recyclerview onTouchEvent: up");
-        break;
-    }
-    mLastTouchY = y;
-    return super.onTouchEvent(ev);
-  }
+//  @Override
+//  public boolean dispatchTouchEvent(MotionEvent ev) {
+//    int y = (int) ev.getY();
+//    int dy = y - mLastTouchY;
+//    switch (ev.getAction()) {
+//      case MotionEvent.ACTION_DOWN:
+//        Log.e(TAG, "recyclerview dispatchTouchEvent: down");
+//        break;
+//      case MotionEvent.ACTION_MOVE:
+//        Log.e(TAG, "recyclerview dispatchTouchEvent: move:" + dy);
+//        break;
+//      case MotionEvent.ACTION_UP:
+//        Log.e(TAG, "recyclerview dispatchTouchEvent: up");
+//        break;
+//    }
+//    return super.dispatchTouchEvent(ev);
+//  }
+//
+//  @Override
+//  public boolean onInterceptTouchEvent(MotionEvent ev) {
+//    int y = (int) ev.getY();
+//    int dy = y - mLastTouchY;
+//    switch (ev.getAction()) {
+//      case MotionEvent.ACTION_DOWN:
+//        Log.e(TAG, "recyclerview onInterceptTouchEvent: down");
+//        break;
+//      case MotionEvent.ACTION_MOVE:
+//        Log.e(TAG, "recyclerview onInterceptTouchEvent: move:" + dy);
+//        break;
+//      case MotionEvent.ACTION_UP:
+//        Log.e(TAG, "recyclerview onInterceptTouchEvent: up");
+//        break;
+//    }
+//    return super.onInterceptTouchEvent(ev);
+//  }
+//
+//  @Override
+//  public boolean onTouchEvent(MotionEvent ev) {
+//    int y = (int) ev.getY();
+//    int dy = y - mLastTouchY;
+//    switch (ev.getAction()) {
+//      case MotionEvent.ACTION_DOWN:
+//        Log.e(TAG, "recyclerview onTouchEvent: down");
+//        break;
+//      case MotionEvent.ACTION_MOVE:
+//        Log.e(TAG, "recyclerview onTouchEvent: move:" + dy);
+//        break;
+//      case MotionEvent.ACTION_UP:
+//        Log.e(TAG, "recyclerview onTouchEvent: up");
+//        break;
+//    }
+//    mLastTouchY = y;
+//    return super.onTouchEvent(ev);
+//  }
 //
 //  @Override
 //  public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {

@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.v7.view.menu.MenuPresenter;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import com.airbnb.lottie.LottieAnimationView;
@@ -63,8 +62,8 @@ public class MyRefreshLayout extends EasyRefreshLayout implements OnScrollStateC
   }
 
   @Override
-  public void stopRefresing() {
-    super.stopRefresing();
+  public void stopRefreshing() {
+    super.stopRefreshing();
     mRefreshAnim.setProgress(0);
     mPulldownAnim.setProgress(0);
   }
