@@ -7,9 +7,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import com.airbnb.lottie.LottieAnimationView;
-import org.yxm.component.easyswiperefreshlayout.EasyRefreshLayout.OnScrollStateChangeListener;
+import org.yxm.component.widget.EasySwipeRefreshLayout;
+import org.yxm.component.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
 
-public class MyRefreshLayout extends EasyRefreshLayout implements OnScrollStateChangeListener {
+public class MyRefreshLayout extends EasySwipeRefreshLayout implements OnScrollStateChangeListener {
 
   private LottieAnimationView mPulldownAnim;
   private LottieAnimationView mRefreshAnim;
@@ -45,7 +46,20 @@ public class MyRefreshLayout extends EasyRefreshLayout implements OnScrollStateC
   }
 
   @Override
-  public void onScrollStateChange(int state) {
+  public void stopRefreshing() {
+    super.stopRefreshing();
+    mRefreshAnim.setProgress(0);
+    mPulldownAnim.setProgress(0);
+  }
+
+  @Override
+  public void onScrollStateChange(int state, int headerHeight, int scrollY) {
+    float process = (float) (scrollY * 1.0 / headerHeight);
+    process = Math.min(0.5f, process);
+    mPulldownAnim.setVisibility(VISIBLE);
+    mPulldownAnim.setProgress(process);
+    mRefreshAnim.setVisibility(GONE);
+
     if (state == REFRESHING) {
       mPulldownAnim.resumeAnimation();
       mPulldownAnim.addAnimatorListener(new AnimatorListenerAdapter() {
@@ -59,22 +73,5 @@ public class MyRefreshLayout extends EasyRefreshLayout implements OnScrollStateC
         }
       });
     }
-  }
-
-  @Override
-  public void stopRefreshing() {
-    super.stopRefreshing();
-    mRefreshAnim.setProgress(0);
-    mPulldownAnim.setProgress(0);
-  }
-
-  @Override
-  public void onScrollProcess(int headerHeight, int scrollY) {
-    float process = (float) (scrollY * 1.0 / headerHeight);
-    process = Math.min(0.5f, process);
-    mPulldownAnim.setVisibility(VISIBLE);
-    mPulldownAnim.setProgress(process);
-
-    mRefreshAnim.setVisibility(GONE);
   }
 }

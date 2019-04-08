@@ -1,4 +1,4 @@
-package org.yxm.component.easyswiperefreshlayout;
+package org.yxm.component.widget;
 
 import android.content.Context;
 import android.support.v4.view.NestedScrollingChild;
@@ -14,13 +14,11 @@ import android.widget.ListView;
 import android.widget.Scroller;
 
 /**
- * 下拉刷新LayoutView
- * 支持自定义HeaderView，重写buildHeaderView方法
- * 要获取下拉状态做动画，需要设置 OnScrollStateChangeListener
+ * 下拉刷新LayoutView 支持自定义HeaderView，重写buildHeaderView方法 要获取下拉状态做动画，需要设置 OnScrollStateChangeListener
  *
  * @author yixiaoming
  */
-public class EasyRefreshLayout extends ViewGroup
+public class EasySwipeRefreshLayout extends ViewGroup
     implements NestedScrollingParent, NestedScrollingChild {
 
   private static final String TAG = "EasyRefreshLayout";
@@ -46,9 +44,7 @@ public class EasyRefreshLayout extends ViewGroup
   /** 刷新状态process获取接口，可做动画 */
   public interface OnScrollStateChangeListener {
 
-    void onScrollStateChange(int state);
-
-    void onScrollProcess(int headerHeight, int scrollY);
+    void onScrollStateChange(int state, int headerHeight, int scrollY);
   }
 
   /** 开始刷新接口 */
@@ -57,15 +53,15 @@ public class EasyRefreshLayout extends ViewGroup
     void onRefresh();
   }
 
-  public EasyRefreshLayout(Context context) {
+  public EasySwipeRefreshLayout(Context context) {
     this(context, null);
   }
 
-  public EasyRefreshLayout(Context context, AttributeSet attrs) {
+  public EasySwipeRefreshLayout(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  public EasyRefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+  public EasySwipeRefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init();
   }
@@ -192,17 +188,14 @@ public class EasyRefreshLayout extends ViewGroup
           mOnRefreshListener.onRefresh();
         }
       }
-      mProcessListener.onScrollProcess(mHeaderView.getHeight(), Math.abs(getScrollY()));
-      mProcessListener.onScrollStateChange(mState);
+      mProcessListener.onScrollStateChange(mState, mHeaderView.getHeight(), Math.abs(getScrollY()));
     }
   }
 
   //<editor-fold desc="NestedScrollingParent相关">
   @Override
   public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-    Log.d(TAG, "onStartNestedScroll: " + nestedScrollAxes);
-    boolean accept = isEnabled() && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-    return accept;
+    return isEnabled() && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
   }
 
   @Override
@@ -228,6 +221,7 @@ public class EasyRefreshLayout extends ViewGroup
       } else {
         scrollBy(0, -getScrollY());
       }
+      computeScrollState(false);
     }
     final int[] parentConsumed = mParentConsumed;
     if (dispatchNestedPreScroll(dx - consumed[0], dy - consumed[1], parentConsumed, null)) {

@@ -18,7 +18,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.yxm.component.easyswiperefreshlayout.EasyRefreshLayout.OnRefreshListener;
+import org.yxm.component.widget.EasySwipeRefreshLayout;
+import org.yxm.component.widget.EasySwipeRefreshLayout.OnRefreshListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,12 +63,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void testEasyrefreshRecyclerView(List<String> datas) {
-    final EasyRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
+    final EasySwipeRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
     final MyRecyclerAdapter adapter = new MyRecyclerAdapter(datas);
     RecyclerView recyclerView = findViewById(R.id.recyclerview);
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-    refreshLayout.setOnRefreshListener(new EasyRefreshLayout.OnRefreshListener() {
+    refreshLayout.setOnRefreshListener(new EasySwipeRefreshLayout.OnRefreshListener() {
       @Override
       public void onRefresh() {
         Log.i(TAG, "onRefresh: ");
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void testEasyrefreshListView(List<String> datas) {
-    final EasyRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
+    final EasySwipeRefreshLayout refreshLayout = findViewById(R.id.refresh_layout);
     ListView listView = findViewById(R.id.recyclerview);
     final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.itemview, datas);
     listView.setAdapter(adapter);
