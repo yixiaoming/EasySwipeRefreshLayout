@@ -1,4 +1,4 @@
-package org.yxm.component.easyswiperefreshlayout;
+package org.yxm.demo.easyswiperefreshlayout;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
     // Context of the app under test.
     Context appContext = InstrumentationRegistry.getTargetContext();
 
-    assertEquals("org.yxm.component.easyswiperefreshlayout", appContext.getPackageName());
+    assertEquals("org.yxm.component.easyswiperefreshlayout.test", appContext.getPackageName());
   }
 }

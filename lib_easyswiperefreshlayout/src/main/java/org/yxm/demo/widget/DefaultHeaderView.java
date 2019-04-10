@@ -1,10 +1,10 @@
-package org.yxm.component.widget;
+package org.yxm.demo.widget;
 
 import android.content.Context;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import org.yxm.component.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
+import org.yxm.demo.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
 
 /**
  * 在EasySwipeRefreshLayout没有设置HeaderView时生效，只有必要的文字状态修改

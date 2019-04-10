@@ -1,7 +1,6 @@
-package org.yxm.component.easyswiperefreshlayout;
+package org.yxm.demo.easyswiperefreshlayout;
 
 import android.support.annotation.NonNull;
-import android.support.v7.view.menu.MenuAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

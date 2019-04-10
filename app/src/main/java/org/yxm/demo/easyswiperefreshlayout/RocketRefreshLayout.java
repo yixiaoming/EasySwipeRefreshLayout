@@ -1,4 +1,4 @@
-package org.yxm.component.easyswiperefreshlayout;
+package org.yxm.demo.easyswiperefreshlayout;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -7,23 +7,28 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import com.airbnb.lottie.LottieAnimationView;
-import org.yxm.component.widget.EasySwipeRefreshLayout;
-import org.yxm.component.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
+import org.yxm.demo.widget.EasySwipeRefreshLayout;
+import org.yxm.demo.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
 
-public class MyRefreshLayout extends EasySwipeRefreshLayout implements OnScrollStateChangeListener {
+
+/**
+ * 自定义HeaderView实例
+ */
+public class RocketRefreshLayout extends EasySwipeRefreshLayout implements
+    OnScrollStateChangeListener {
 
   private LottieAnimationView mPulldownAnim;
   private LottieAnimationView mRefreshAnim;
 
-  public MyRefreshLayout(Context context) {
+  public RocketRefreshLayout(Context context) {
     super(context);
   }
 
-  public MyRefreshLayout(Context context, AttributeSet attrs) {
+  public RocketRefreshLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public MyRefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+  public RocketRefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
@@ -33,7 +38,7 @@ public class MyRefreshLayout extends EasySwipeRefreshLayout implements OnScrollS
   @Override
   protected void buildHeaderView() {
     mHeaderView = LayoutInflater.from(getContext()).inflate(
-        R.layout.header_view, this, false
+        R.layout.rocket_header_view, this, false
     );
     addView(mHeaderView);
     setProcessListener(this);

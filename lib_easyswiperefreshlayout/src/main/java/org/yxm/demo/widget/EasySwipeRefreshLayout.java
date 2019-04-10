@@ -1,4 +1,4 @@
-package org.yxm.component.widget;
+package org.yxm.demo.widget;
 
 import android.content.Context;
 import android.support.v4.view.NestedScrollingChild;
@@ -7,7 +7,6 @@ import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ListViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;

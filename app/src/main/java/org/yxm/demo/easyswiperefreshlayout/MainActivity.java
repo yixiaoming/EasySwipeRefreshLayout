@@ -1,9 +1,11 @@
-package org.yxm.component.easyswiperefreshlayout;
+package org.yxm.demo.easyswiperefreshlayout;
 
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,31 +15,37 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.yxm.component.widget.EasySwipeRefreshLayout;
-import org.yxm.component.widget.EasySwipeRefreshLayout.OnRefreshListener;
+import org.yxm.demo.easyswiperefreshlayout.fragments.EarthFragment;
+import org.yxm.demo.widget.EasySwipeRefreshLayout;
+import org.yxm.demo.widget.EasySwipeRefreshLayout.OnRefreshListener;
 
 public class MainActivity extends AppCompatActivity {
 
   public static final String TAG = "EasyRefreshLayout";
   private static final String[] PREFIXES = new String[]{"a", "b", "c", "d"};
 
+  private FrameLayout mContentLayout;
+
+  private Fragment mEarthFragment;
+
   @RequiresApi(api = VERSION_CODES.LOLLIPOP)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
-    List<String> datas = new ArrayList<>();
-    for (int i = 0; i < 20; i++) {
-      datas.add("item:" + i);
+    mContentLayout = findViewById(R.id.content);
+    if (mEarthFragment == null) {
+      mEarthFragment = EarthFragment.newInstance();
+      FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+      transaction.add(R.id.content, mEarthFragment, EarthFragment.class.getSimpleName());
+      transaction.commit();
     }
-
-    testEasyrefreshListView(datas);
   }
 
   private void testSwipeRefreshLayout(List<String> datas) {

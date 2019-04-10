@@ -1,4 +1,4 @@
-package org.yxm.component.easyswiperefreshlayout;
+package org.yxm.demo.easyswiperefreshlayout;
 
 import org.junit.Test;
 

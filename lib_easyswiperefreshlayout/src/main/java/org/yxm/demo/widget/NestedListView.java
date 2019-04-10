@@ -1,4 +1,4 @@
-package org.yxm.component.widget;
+package org.yxm.demo.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
