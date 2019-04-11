@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.yxm.demo.easyswiperefreshlayout.fragments.EarthFragment;
+import org.yxm.demo.easyswiperefreshlayout.fragments.RocketFragment;
 import org.yxm.demo.widget.EasySwipeRefreshLayout;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnRefreshListener;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
   private FrameLayout mContentLayout;
 
   private Fragment mEarthFragment;
+  private Fragment mRocketFragment;
 
   @RequiresApi(api = VERSION_CODES.LOLLIPOP)
   @Override
@@ -40,10 +42,16 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     mContentLayout = findViewById(R.id.content);
-    if (mEarthFragment == null) {
-      mEarthFragment = EarthFragment.newInstance();
+//    if (mEarthFragment == null) {
+//      mEarthFragment = EarthFragment.newInstance();
+//      FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//      transaction.add(R.id.content, mEarthFragment, EarthFragment.class.getSimpleName());
+//      transaction.commit();
+//    }
+    if (mRocketFragment == null) {
+      mRocketFragment = RocketFragment.newInstance();
       FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-      transaction.add(R.id.content, mEarthFragment, EarthFragment.class.getSimpleName());
+      transaction.add(R.id.content, mRocketFragment, RocketFragment.class.getSimpleName());
       transaction.commit();
     }
   }

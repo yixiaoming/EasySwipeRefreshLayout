@@ -13,6 +13,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.Vi
 
   public void insert(String item, int position){
     mDatas.add(position, item);
+    notifyDataSetChanged();
   }
 
   public MyRecyclerAdapter(List<String> mDatas) {

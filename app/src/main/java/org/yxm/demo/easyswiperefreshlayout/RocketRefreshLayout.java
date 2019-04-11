@@ -12,7 +12,7 @@ import org.yxm.demo.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
 
 
 /**
- * 自定义HeaderView实例
+ * 自定义HeaderView示例
  */
 public class RocketRefreshLayout extends EasySwipeRefreshLayout implements
     OnScrollStateChangeListener {
