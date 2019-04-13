@@ -1,7 +1,6 @@
 package org.yxm.demo.easyswiperefreshlayout;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import com.airbnb.lottie.LottieAnimationView;
 import org.yxm.demo.widget.EasySwipeRefreshLayout;
@@ -18,14 +17,6 @@ public class EarthRefreshlayout extends EasySwipeRefreshLayout
 
   public EarthRefreshlayout(Context context) {
     super(context);
-  }
-
-  public EarthRefreshlayout(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
-
-  public EarthRefreshlayout(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
   }
 
   /**

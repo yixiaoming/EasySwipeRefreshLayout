@@ -20,6 +20,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
   public void insert(Article article, int position) {
     mDatas.add(position, article);
+    notifyDataSetChanged();
+  }
+
+  public void insert(List<Article> articles, int position) {
+    mDatas.addAll(position, articles);
+    notifyDataSetChanged();
   }
 
   @NonNull

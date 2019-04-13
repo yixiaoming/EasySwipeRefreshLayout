@@ -12,10 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import org.yxm.demo.easyswiperefreshlayout.MyRecyclerAdapter;
+import org.yxm.demo.easyswiperefreshlayout.CustomAdapter;
 import org.yxm.demo.easyswiperefreshlayout.R;
+import org.yxm.demo.easyswiperefreshlayout.pojo.Article;
+import org.yxm.demo.easyswiperefreshlayout.repo.ArticleRepo;
 import org.yxm.demo.widget.EasySwipeRefreshLayout;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnRefreshListener;
 
@@ -23,7 +23,12 @@ public class EarthFragment extends Fragment {
 
   private EasySwipeRefreshLayout mRefreshLayout;
   private RecyclerView mRecyclerView;
-  private MyRecyclerAdapter mAdapter;
+  private CustomAdapter mAdapter;
+  private ArticleRepo mArticleRepo;
+
+  public EarthFragment() {
+    mArticleRepo = new ArticleRepo();
+  }
 
   public static EarthFragment newInstance() {
     EarthFragment fragment = new EarthFragment();
@@ -45,11 +50,8 @@ public class EarthFragment extends Fragment {
     mRefreshLayout = root.findViewById(R.id.refresh_layout);
     mRecyclerView = root.findViewById(R.id.recyclerview);
     mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    List<String> datas = new ArrayList<>();
-    for (int i = 0; i < 20; i++) {
-      datas.add("item:" + i);
-    }
-    mAdapter = new MyRecyclerAdapter(datas);
+    mAdapter = new CustomAdapter(new ArrayList<Article>());
+    mAdapter.insert(mArticleRepo.getArticles(), 0);
     mRecyclerView.setAdapter(mAdapter);
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override
@@ -57,7 +59,7 @@ public class EarthFragment extends Fragment {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
           @Override
           public void run() {
-            mAdapter.insert("item:" + new Random(100).nextInt(), 0);
+            mAdapter.insert(mArticleRepo.getArticles(), 0);
             mRefreshLayout.stopRefreshing();
           }
         }, 3 * 1000);

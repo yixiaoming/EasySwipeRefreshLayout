@@ -28,10 +28,6 @@ public class RocketRefreshLayout extends EasySwipeRefreshLayout implements
     super(context, attrs);
   }
 
-  public RocketRefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-  }
-
   /**
    * 如果想自己设置HeaderView，重写这个方法，设置header view和scroll listener
    */
