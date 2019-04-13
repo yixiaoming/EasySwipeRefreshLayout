@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
-import org.yxm.demo.easyswiperefreshlayout.CustomAdapter;
+import org.yxm.demo.easyswiperefreshlayout.CustomRecyclerAdapter;
 import org.yxm.demo.easyswiperefreshlayout.R;
 import org.yxm.demo.easyswiperefreshlayout.RocketRefreshLayout;
 import org.yxm.demo.easyswiperefreshlayout.pojo.Article;
@@ -22,7 +22,7 @@ public class RocketFragment extends Fragment {
 
   private RocketRefreshLayout mRefreshLayout;
   private RecyclerView mRecyclerView;
-  private CustomAdapter mAdapter;
+  private CustomRecyclerAdapter mAdapter;
 
   private ArticleRepo mArticleRepo;
 
@@ -49,7 +49,7 @@ public class RocketFragment extends Fragment {
     mRefreshLayout = root.findViewById(R.id.refresh_layout);
     mRecyclerView = root.findViewById(R.id.recyclerview);
     mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    mAdapter = new CustomAdapter(new ArrayList<Article>());
+    mAdapter = new CustomRecyclerAdapter(new ArrayList<Article>());
     mRecyclerView.setAdapter(mAdapter);
     mAdapter.insert(mArticleRepo.getArticles(), 0);
     mAdapter.notifyDataSetChanged();

@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
-import org.yxm.demo.easyswiperefreshlayout.CustomAdapter;
+import org.yxm.demo.easyswiperefreshlayout.CustomRecyclerAdapter;
 import org.yxm.demo.easyswiperefreshlayout.R;
 import org.yxm.demo.easyswiperefreshlayout.pojo.Article;
 import org.yxm.demo.easyswiperefreshlayout.repo.ArticleRepo;
@@ -22,7 +22,7 @@ public class DefaultFragment extends Fragment {
 
   private EasySwipeRefreshLayout mRefreshlayout;
   private RecyclerView mRecyclerview;
-  private CustomAdapter mAdapter;
+  private CustomRecyclerAdapter mAdapter;
   private ArticleRepo mArticleRepo;
 
   public DefaultFragment() {
@@ -48,7 +48,7 @@ public class DefaultFragment extends Fragment {
     mRefreshlayout = root.findViewById(R.id.refresh_layout);
     mRecyclerview = root.findViewById(R.id.recyclerview);
     mRecyclerview.setLayoutManager(new GridLayoutManager(getContext(), 2));
-    mAdapter = new CustomAdapter(new ArrayList<Article>());
+    mAdapter = new CustomRecyclerAdapter(new ArrayList<Article>());
     mAdapter.insert(mArticleRepo.getArticles(), 0);
     mRecyclerview.setAdapter(mAdapter);
     mRefreshlayout.setOnRefreshListener(new OnRefreshListener() {

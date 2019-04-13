@@ -6,24 +6,23 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
-import org.yxm.demo.easyswiperefreshlayout.CustomAdapter;
+import org.yxm.demo.easyswiperefreshlayout.CustomListAdapter;
 import org.yxm.demo.easyswiperefreshlayout.R;
 import org.yxm.demo.easyswiperefreshlayout.pojo.Article;
 import org.yxm.demo.easyswiperefreshlayout.repo.ArticleRepo;
 import org.yxm.demo.widget.EasySwipeRefreshLayout;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnRefreshListener;
+import org.yxm.demo.widget.NestedListView;
 
 public class EarthFragment extends Fragment {
 
   private EasySwipeRefreshLayout mRefreshLayout;
-  private RecyclerView mRecyclerView;
-  private CustomAdapter mAdapter;
+  private NestedListView mNestedListview;
+  private CustomListAdapter mAdapter;
   private ArticleRepo mArticleRepo;
 
   public EarthFragment() {
@@ -48,11 +47,10 @@ public class EarthFragment extends Fragment {
 
   private void initViews(View root) {
     mRefreshLayout = root.findViewById(R.id.refresh_layout);
-    mRecyclerView = root.findViewById(R.id.recyclerview);
-    mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    mAdapter = new CustomAdapter(new ArrayList<Article>());
+    mNestedListview = root.findViewById(R.id.recyclerview);
+    mAdapter = new CustomListAdapter(new ArrayList<Article>());
     mAdapter.insert(mArticleRepo.getArticles(), 0);
-    mRecyclerView.setAdapter(mAdapter);
+    mNestedListview.setAdapter(mAdapter);
     mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override
       public void onRefresh() {

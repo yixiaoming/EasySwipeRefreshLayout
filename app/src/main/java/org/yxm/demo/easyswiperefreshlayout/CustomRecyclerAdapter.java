@@ -10,11 +10,11 @@ import android.widget.TextView;
 import java.util.List;
 import org.yxm.demo.easyswiperefreshlayout.pojo.Article;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAdapter.ViewHolder> {
 
   private List<Article> mDatas;
 
-  public CustomAdapter(List<Article> mDatas) {
+  public CustomRecyclerAdapter(List<Article> mDatas) {
     this.mDatas = mDatas;
   }
 
