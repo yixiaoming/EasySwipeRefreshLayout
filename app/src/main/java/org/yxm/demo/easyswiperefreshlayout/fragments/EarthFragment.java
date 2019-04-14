@@ -59,6 +59,7 @@ public class EarthFragment extends Fragment {
           public void run() {
             mAdapter.insert(mArticleRepo.getRadomArticle(), 0);
             mRefreshLayout.stopRefreshing();
+            mAdapter.notifyDataSetChanged();
           }
         }, 3 * 1000);
       }

@@ -16,12 +16,10 @@ public class CustomListAdapter extends BaseAdapter {
 
   public void insert(List<Article> datas, int position) {
     mDatas.addAll(position, datas);
-    notifyDataSetChanged();
   }
 
   public void insert(Article data, int position) {
     mDatas.add(position, data);
-    notifyDataSetChanged();
   }
 
   public CustomListAdapter(List<Article> mDatas) {
