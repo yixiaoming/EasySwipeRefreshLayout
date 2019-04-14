@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
-import org.yxm.demo.easyswiperefreshlayout.CustomListAdapter;
+import org.yxm.demo.easyswiperefreshlayout.adapters.CustomListAdapter;
 import org.yxm.demo.easyswiperefreshlayout.R;
 import org.yxm.demo.easyswiperefreshlayout.pojo.Article;
 import org.yxm.demo.easyswiperefreshlayout.repo.ArticleRepo;

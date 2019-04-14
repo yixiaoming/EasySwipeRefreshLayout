@@ -1,9 +1,10 @@
-package org.yxm.demo.easyswiperefreshlayout;
+package org.yxm.demo.easyswiperefreshlayout.refreshlayout;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import com.airbnb.lottie.LottieAnimationView;
+import org.yxm.demo.easyswiperefreshlayout.R;
 import org.yxm.demo.widget.EasySwipeRefreshLayout;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
 

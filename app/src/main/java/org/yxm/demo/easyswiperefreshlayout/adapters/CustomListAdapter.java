@@ -1,4 +1,4 @@
-package org.yxm.demo.easyswiperefreshlayout;
+package org.yxm.demo.easyswiperefreshlayout.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
+import org.yxm.demo.easyswiperefreshlayout.R;
 import org.yxm.demo.easyswiperefreshlayout.pojo.Article;
 
 public class CustomListAdapter extends BaseAdapter {
