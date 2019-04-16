@@ -40,7 +40,12 @@ public class EasySwipeRefreshLayout extends ViewGroup
 
   private int mTotalUnconsumed = 0;
 
-  private int mStyle = 1;
+  private static final int STYLE_MOVE_HEADER = 0;
+  private static final int STYLE_FIXED_HEADER = 1;
+
+  private int mStyle = STYLE_FIXED_HEADER;
+
+  private IStyleStrategy mStrategy;
 
   /** 刷新状态process获取接口，可做动画 */
   public interface OnScrollStateChangeListener {
@@ -78,6 +83,32 @@ public class EasySwipeRefreshLayout extends ViewGroup
     super.onFinishInflate();
     mTargetView = getChildAt(0);
     buildHeaderView();
+
+    mStrategy = new FixedHeaderStrategy(this);
+  }
+
+  public View getTargetView(){
+    return mTargetView;
+  }
+
+  public View getHeaderView(){
+    return mHeaderView;
+  }
+
+  public OnScrollStateChangeListener getProcessListener() {
+    return mProcessListener;
+  }
+
+  public OnRefreshListener getOnRefreshListener() {
+    return mOnRefreshListener;
+  }
+
+  public void setState(int state){
+    mState = state;
+  }
+
+  public int getState(){
+    return mState;
   }
 
   /**
@@ -106,9 +137,9 @@ public class EasySwipeRefreshLayout extends ViewGroup
     for (int i = 0; i < getChildCount(); i++) {
       View child = getChildAt(i);
       if (child == mHeaderView) {
-        if (mStyle == 0) {
+        if (mStyle == STYLE_MOVE_HEADER) {
           child.layout(0, 0 - mHeaderView.getMeasuredHeight(), mHeaderView.getMeasuredWidth(), 0);
-        } else if (mStyle == 1) {
+        } else if (mStyle == STYLE_FIXED_HEADER) {
           child.layout(0, 0, mHeaderView.getMeasuredWidth(), mHeaderView.getMeasuredHeight());
         }
       } else {
@@ -134,6 +165,7 @@ public class EasySwipeRefreshLayout extends ViewGroup
    */
   public void setOnRefreshListener(OnRefreshListener listener) {
     mOnRefreshListener = listener;
+    mStrategy.setOnRefreshListener(listener);
   }
 
   /**
@@ -146,25 +178,9 @@ public class EasySwipeRefreshLayout extends ViewGroup
     return mTargetView.canScrollVertically(-1);
   }
 
-  private void smoothScrollTo(int from, int to) {
+  public void smoothScrollTo(int from, int to) {
     mScroller.startScroll(0, from, 0, to - from, 500);
     invalidate();
-  }
-
-  private void smoothScrollToReset() {
-    if (mStyle == 0) {
-      smoothScrollTo(getScrollY(), 0);
-    } else if (mStyle == 1) {
-      mTargetView.layout(0, 0, mTargetView.getWidth(), mTargetView.getHeight());
-    }
-  }
-
-  private void smoothScrollToHeader() {
-    if (mStyle == 0) {
-      smoothScrollTo(getScrollY(), -mHeaderView.getHeight());
-    } else if (mStyle == 1) {
-      mTargetView.layout(0, mHeaderView.getHeight(), mTargetView.getWidth(), getHeight());
-    }
   }
 
   @Override
@@ -176,7 +192,7 @@ public class EasySwipeRefreshLayout extends ViewGroup
   }
 
   public void stopRefreshing() {
-    smoothScrollToReset();
+    mStrategy.smoothScrollToReset();
     mState = RESET;
   }
 
@@ -186,36 +202,7 @@ public class EasySwipeRefreshLayout extends ViewGroup
    * @param isRelease touch事件release标志
    */
   private void computeScrollState(boolean isRelease) {
-    if (mState == REFRESHING) {
-      return;
-    }
-    if (mProcessListener != null) {
-      if (mStyle == 0) {
-        if (-getScrollY() >= mHeaderView.getHeight()) {
-          mState = RELEASE_TO_REFRESH;
-        } else if (-getScrollY() > 0 && -getScrollY() < mHeaderView.getHeight()) {
-          mState = PULL_TO_REFRESH;
-        }
-      } else if (mStyle == 1) {
-        if (mTargetView.getTop() >= mHeaderView.getHeight()) {
-          mState = RELEASE_TO_REFRESH;
-        } else if (mTargetView.getTop() < mHeaderView.getHeight()) {
-          mState = PULL_TO_REFRESH;
-        }
-      }
-      if (isRelease && mState == RELEASE_TO_REFRESH) {
-        mState = REFRESHING;
-        if (mOnRefreshListener != null) {
-          mOnRefreshListener.onRefresh();
-        }
-      }
-      if (mStyle == 0) {
-        mProcessListener
-            .onScrollStateChange(mState, mHeaderView.getHeight(), Math.abs(getScrollY()));
-      } else if (mStyle == 1) {
-        mProcessListener.onScrollStateChange(mState, mHeaderView.getHeight(), mTargetView.getTop());
-      }
-    }
+    mStrategy.computeScrollState(isRelease);
   }
 
   //<editor-fold desc="NestedScrollingParent相关">
@@ -241,14 +228,7 @@ public class EasySwipeRefreshLayout extends ViewGroup
         mTotalUnconsumed -= dy;
         consumed[1] = dy;
       }
-      // 解决快速方向滑动导致整个layout都向上滑动问题
-      if (mStyle == 0) {
-        int mostScrollOffset = dy + getScrollY() <= 0 ? dy : -getScrollY();
-        scrollBy(0, mostScrollOffset);
-      } else if (mStyle == 1) {
-        int mostScrollOffset = -dy + mTargetView.getTop() >= 0 ? -dy : -mTargetView.getTop();
-        mTargetView.offsetTopAndBottom(mostScrollOffset);
-      }
+      mStrategy.onNestedPreScroll(dy);
       computeScrollState(false);
     }
 
@@ -269,14 +249,7 @@ public class EasySwipeRefreshLayout extends ViewGroup
     int dy = dyUnconsumed + mParentOffsetInWindow[1];
     if (dy < 0 && !canChildScrollDown()) {
       mTotalUnconsumed += Math.abs(dy);
-      if (mStyle == 0) {
-        scrollBy(0, dy);
-        computeScrollState(false);
-
-      } else if (mStyle == 1) {
-        mTargetView.offsetTopAndBottom(-dy);
-        computeScrollState(false);
-      }
+      mStrategy.onNestedScroll(dy);
     }
   }
 
@@ -284,24 +257,7 @@ public class EasySwipeRefreshLayout extends ViewGroup
   public void onStopNestedScroll(View child) {
     mNestedScrollingParentHelper.onStopNestedScroll(child);
     if (mTotalUnconsumed > 0) {
-      if (mStyle == 0) {
-        if (-getScrollY() >= mHeaderView.getHeight()) {
-          computeScrollState(true);
-          smoothScrollToHeader();
-        } else if (getScrollY() < 0 && -getScrollY() < mHeaderView.getHeight()) {
-          computeScrollState(true);
-          smoothScrollToReset();
-        }
-      } else if (mStyle == 1) {
-        if (mTargetView.getTop() >= mHeaderView.getHeight()) {
-          smoothScrollToHeader();
-          computeScrollState(true);
-        } else if (mTargetView.getTop() < mHeaderView.getHeight()) {
-          smoothScrollToReset();
-          computeScrollState(true);
-        }
-      }
-
+      mStrategy.onStopNestedScroll();
       mTotalUnconsumed = 0;
     }
     stopNestedScroll();
