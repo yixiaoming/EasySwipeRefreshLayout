@@ -25,6 +25,11 @@ class FixedHeaderStrategy implements IStyleStrategy {
   }
 
   @Override
+  public void onLayout() {
+    mHeaderView.layout(0, 0, mHeaderView.getMeasuredWidth(), mHeaderView.getMeasuredHeight());
+  }
+
+  @Override
   public void onStopNestedScroll() {
     if (mTargetView.getTop() >= mHeaderView.getHeight()) {
       smoothScrollToHeader();

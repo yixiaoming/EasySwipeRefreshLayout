@@ -4,6 +4,8 @@ import org.yxm.demo.widget.EasySwipeRefreshLayout.OnRefreshListener;
 
 public interface IStyleStrategy {
 
+  void onLayout();
+
   void onStopNestedScroll();
 
   void onNestedPreScroll(int dy);

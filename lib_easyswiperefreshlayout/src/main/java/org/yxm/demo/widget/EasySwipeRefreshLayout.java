@@ -40,11 +40,6 @@ public class EasySwipeRefreshLayout extends ViewGroup
 
   private int mTotalUnconsumed = 0;
 
-  private static final int STYLE_MOVE_HEADER = 0;
-  private static final int STYLE_FIXED_HEADER = 1;
-
-  private int mStyle = STYLE_FIXED_HEADER;
-
   private IStyleStrategy mStrategy;
 
   /** 刷新状态process获取接口，可做动画 */
@@ -84,9 +79,10 @@ public class EasySwipeRefreshLayout extends ViewGroup
     mTargetView = getChildAt(0);
     buildHeaderView();
 
-    mStrategy = new FixedHeaderStrategy(this);
+    mStrategy = new MoveHeaderStrategy(this);
   }
 
+  //<editor-fold desc="提供给StyleStrategy使用的方法">
   public View getTargetView(){
     return mTargetView;
   }
@@ -110,6 +106,7 @@ public class EasySwipeRefreshLayout extends ViewGroup
   public int getState(){
     return mState;
   }
+  //<editor-fold>
 
   /**
    * 自定义HeaderView重写该方法
@@ -137,11 +134,7 @@ public class EasySwipeRefreshLayout extends ViewGroup
     for (int i = 0; i < getChildCount(); i++) {
       View child = getChildAt(i);
       if (child == mHeaderView) {
-        if (mStyle == STYLE_MOVE_HEADER) {
-          child.layout(0, 0 - mHeaderView.getMeasuredHeight(), mHeaderView.getMeasuredWidth(), 0);
-        } else if (mStyle == STYLE_FIXED_HEADER) {
-          child.layout(0, 0, mHeaderView.getMeasuredWidth(), mHeaderView.getMeasuredHeight());
-        }
+        mStrategy.onLayout();
       } else {
         if (child.getVisibility() == View.GONE) {
           continue;

@@ -25,6 +25,11 @@ class MoveHeaderStrategy implements IStyleStrategy {
   }
 
   @Override
+  public void onLayout() {
+    mHeaderView.layout(0, 0 - mHeaderView.getMeasuredHeight(), mHeaderView.getMeasuredWidth(), 0);
+  }
+
+  @Override
   public void onStopNestedScroll() {
     if (-mRefreshLayout.getScrollY() >= mHeaderView.getHeight()) {
       computeScrollState(true);
