@@ -36,7 +36,7 @@
     </android.support.design.widget.CollapsingToolbarLayout>
   </android.support.design.widget.AppBarLayout>
 
-  <org.yxm.demo.easyswiperefreshlayout.refreshlayout.MoveHeaderRefreshLayout
+  <org.yxm.demo.refreshlayout.layout.MoveHeaderRefreshLayout
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -45,8 +45,7 @@
     <android.support.v7.widget.RecyclerView
       android:id="@+id/recyclerview"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@android:color/background_light"/>
-  </org.yxm.demo.easyswiperefreshlayout.refreshlayout.MoveHeaderRefreshLayout>
+      android:layout_height="match_parent"/>
+  </org.yxm.demo.refreshlayout.layout.MoveHeaderRefreshLayout>
 
 </android.support.design.widget.CoordinatorLayout>

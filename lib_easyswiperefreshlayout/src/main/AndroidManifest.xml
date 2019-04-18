@@ -1,2 +1,2 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="org.yxm.demo.widget.easyswiperefreshlayout"/>
+  package="org.yxm.component.refreshlayout"/>

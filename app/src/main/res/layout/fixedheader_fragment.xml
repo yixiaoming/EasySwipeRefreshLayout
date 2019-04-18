@@ -3,7 +3,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <org.yxm.demo.easyswiperefreshlayout.refreshlayout.FixedHeaderRefreshlayout
+  <org.yxm.demo.refreshlayout.layout.FixedHeaderRefreshlayout
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,13 +12,13 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent">
 
-      <org.yxm.demo.widget.NestedListView
-        android:background="@android:color/background_light"
+      <org.yxm.component.refreshlayout.NestedListView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@android:color/background_light"/>
     </android.support.v4.widget.NestedScrollView>
 
-  </org.yxm.demo.easyswiperefreshlayout.refreshlayout.FixedHeaderRefreshlayout>
+  </org.yxm.demo.refreshlayout.layout.FixedHeaderRefreshlayout>
 
 </FrameLayout>
