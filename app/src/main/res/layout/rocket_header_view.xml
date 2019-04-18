@@ -2,7 +2,8 @@
 <FrameLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="120dp">
+  android:layout_height="120dp"
+  android:orientation="horizontal">
 
   <com.airbnb.lottie.LottieAnimationView
     android:id="@+id/pulldown_anim"
@@ -13,7 +14,7 @@
   <com.airbnb.lottie.LottieAnimationView
     android:id="@+id/refresh_anim"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
     android:scaleType="centerInside"/>
 

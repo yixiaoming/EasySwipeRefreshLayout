@@ -18,19 +18,19 @@ import org.yxm.demo.widget.EasySwipeRefreshLayout;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnRefreshListener;
 import org.yxm.demo.widget.NestedListView;
 
-public class EarthFragment extends Fragment {
+public class FixedHeaderFragment extends Fragment {
 
   private EasySwipeRefreshLayout mRefreshLayout;
   private NestedListView mNestedListview;
   private CustomListAdapter mAdapter;
   private ArticleRepo mArticleRepo;
 
-  public EarthFragment() {
+  public FixedHeaderFragment() {
     mArticleRepo = new ArticleRepo();
   }
 
-  public static EarthFragment newInstance() {
-    EarthFragment fragment = new EarthFragment();
+  public static FixedHeaderFragment newInstance() {
+    FixedHeaderFragment fragment = new FixedHeaderFragment();
     fragment.setArguments(null);
     return fragment;
   }
@@ -40,7 +40,7 @@ public class EarthFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater,
       @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View root = LayoutInflater.from(getContext())
-        .inflate(R.layout.earth_fragment, container, false);
+        .inflate(R.layout.fixedheader_fragment, container, false);
     initViews(root);
     return root;
   }

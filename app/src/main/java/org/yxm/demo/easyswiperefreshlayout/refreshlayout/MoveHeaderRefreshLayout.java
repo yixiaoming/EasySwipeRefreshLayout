@@ -10,22 +10,23 @@ import com.airbnb.lottie.LottieAnimationView;
 import org.yxm.demo.easyswiperefreshlayout.R;
 import org.yxm.demo.widget.EasySwipeRefreshLayout;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
+import org.yxm.demo.widget.MoveHeaderStrategy;
 
 
 /**
  * 自定义HeaderView示例
  */
-public class RocketRefreshLayout extends EasySwipeRefreshLayout implements
+public class MoveHeaderRefreshLayout extends EasySwipeRefreshLayout implements
     OnScrollStateChangeListener {
 
   private LottieAnimationView mPulldownAnim;
   private LottieAnimationView mRefreshAnim;
 
-  public RocketRefreshLayout(Context context) {
-    super(context);
+  public MoveHeaderRefreshLayout(Context context) {
+    this(context, null);
   }
 
-  public RocketRefreshLayout(Context context, AttributeSet attrs) {
+  public MoveHeaderRefreshLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
@@ -45,6 +46,7 @@ public class RocketRefreshLayout extends EasySwipeRefreshLayout implements
     mRefreshAnim = findViewById(R.id.refresh_anim);
     mRefreshAnim.setAnimation("circle.json");
     mRefreshAnim.setRepeatCount(ValueAnimator.INFINITE);
+    mStrategy = new MoveHeaderStrategy(this);
   }
 
   @Override
@@ -52,26 +54,26 @@ public class RocketRefreshLayout extends EasySwipeRefreshLayout implements
     super.stopRefreshing();
     mRefreshAnim.setProgress(0);
     mPulldownAnim.setProgress(0);
+    mRefreshAnim.setVisibility(GONE);
+    mPulldownAnim.setVisibility(GONE);
   }
 
   @Override
   public void onScrollStateChange(int state, int headerHeight, int scrollY) {
     float process = (float) (scrollY * 1.0 / headerHeight);
     process = Math.min(0.5f, process);
+    mRefreshAnim.setVisibility(GONE);
     mPulldownAnim.setVisibility(VISIBLE);
     mPulldownAnim.setProgress(process);
-    mRefreshAnim.setVisibility(GONE);
 
     if (state == REFRESHING) {
       mPulldownAnim.resumeAnimation();
       mPulldownAnim.addAnimatorListener(new AnimatorListenerAdapter() {
         @Override
         public void onAnimationEnd(Animator animation) {
-          super.onAnimationEnd(animation);
-          mPulldownAnim.pauseAnimation();
           mPulldownAnim.setVisibility(GONE);
-          mRefreshAnim.playAnimation();
           mRefreshAnim.setVisibility(VISIBLE);
+          mRefreshAnim.playAnimation();
         }
       });
     }

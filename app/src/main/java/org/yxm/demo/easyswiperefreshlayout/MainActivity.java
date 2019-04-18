@@ -10,8 +10,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import org.yxm.demo.easyswiperefreshlayout.fragments.DefaultFragment;
-import org.yxm.demo.easyswiperefreshlayout.fragments.EarthFragment;
-import org.yxm.demo.easyswiperefreshlayout.fragments.RocketFragment;
+import org.yxm.demo.easyswiperefreshlayout.fragments.FixedHeaderFragment;
+import org.yxm.demo.easyswiperefreshlayout.fragments.MoveHeaderFragment;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener {
 
@@ -39,11 +39,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         selected = true;
         break;
       case R.id.action_rocket_fragment:
-        showFragment(RocketFragment.class.getSimpleName());
+        showFragment(MoveHeaderFragment.class.getSimpleName());
         selected = true;
         break;
       case R.id.action_earth_fragment:
-        showFragment(EarthFragment.class.getSimpleName());
+        showFragment(FixedHeaderFragment.class.getSimpleName());
         selected = true;
         break;
       case R.id.action_nest_fragment:
@@ -61,10 +61,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     if (fragment == null) {
       if (DefaultFragment.class.getSimpleName().equals(fragmentTag)) {
         fragment = DefaultFragment.newInstance();
-      } else if (RocketFragment.class.getSimpleName().equals(fragmentTag)) {
-        fragment = RocketFragment.newInstance();
-      } else if (EarthFragment.class.getSimpleName().equals(fragmentTag)) {
-        fragment = EarthFragment.newInstance();
+      } else if (MoveHeaderFragment.class.getSimpleName().equals(fragmentTag)) {
+        fragment = MoveHeaderFragment.newInstance();
+      } else if (FixedHeaderFragment.class.getSimpleName().equals(fragmentTag)) {
+        fragment = FixedHeaderFragment.newInstance();
       }
       ft.add(R.id.content, fragment, fragmentTag);
     }

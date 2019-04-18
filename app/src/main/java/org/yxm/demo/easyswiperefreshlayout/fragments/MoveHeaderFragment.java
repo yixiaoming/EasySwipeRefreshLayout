@@ -13,25 +13,25 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import org.yxm.demo.easyswiperefreshlayout.adapters.CustomRecyclerAdapter;
 import org.yxm.demo.easyswiperefreshlayout.R;
-import org.yxm.demo.easyswiperefreshlayout.refreshlayout.RocketRefreshLayout;
+import org.yxm.demo.easyswiperefreshlayout.refreshlayout.MoveHeaderRefreshLayout;
 import org.yxm.demo.easyswiperefreshlayout.pojo.Article;
 import org.yxm.demo.easyswiperefreshlayout.repo.ArticleRepo;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnRefreshListener;
 
-public class RocketFragment extends Fragment {
+public class MoveHeaderFragment extends Fragment {
 
-  private RocketRefreshLayout mRefreshLayout;
+  private MoveHeaderRefreshLayout mRefreshLayout;
   private RecyclerView mRecyclerView;
   private CustomRecyclerAdapter mAdapter;
 
   private ArticleRepo mArticleRepo;
 
-  public static RocketFragment newInstance() {
-    RocketFragment fragment = new RocketFragment();
+  public static MoveHeaderFragment newInstance() {
+    MoveHeaderFragment fragment = new MoveHeaderFragment();
     return fragment;
   }
 
-  public RocketFragment() {
+  public MoveHeaderFragment() {
     mArticleRepo = new ArticleRepo();
   }
 
@@ -39,7 +39,7 @@ public class RocketFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View root = LayoutInflater.from(getContext()).inflate(R.layout.rocket_fragment,
+    View root = LayoutInflater.from(getContext()).inflate(R.layout.moveheader_fragment,
         container, false);
     initViews(root);
     return root;

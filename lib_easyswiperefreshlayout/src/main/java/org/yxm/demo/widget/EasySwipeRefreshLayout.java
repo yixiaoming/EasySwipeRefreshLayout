@@ -22,25 +22,38 @@ public class EasySwipeRefreshLayout extends ViewGroup
 
   private static final String TAG = "EasyRefreshLayout";
 
+  /** 状态：默认 */
   public static final int RESET = 0;
+  /** 状态：下拉中，未到达指定高度 */
   public static final int PULL_TO_REFRESH = 1;
+  /** 状态：下拉中，到达指定高度 */
   public static final int RELEASE_TO_REFRESH = 2;
+  /** 状态：释放，刷新中 */
   public static final int REFRESHING = 3;
 
+  /** 下拉刷新头，支持自定义 */
   protected View mHeaderView;
+  /** 判断下拉刷新的target view */
   private View mTargetView;
+  /** nested滑动parent */
   private NestedScrollingParentHelper mNestedScrollingParentHelper;
+  /** 释放时做动画scroller */
   private Scroller mScroller;
+  /** 下拉进度，状态回调 */
   private OnScrollStateChangeListener mProcessListener;
+  /** 开始刷新回调 */
   private OnRefreshListener mOnRefreshListener;
+  /** 当前状态 */
   private int mState = RESET;
 
+  /** onNestedPreScroll中计算父view消耗 */
   private int[] mParentConsumed = new int[2];
+  /** onNestedScroll中使用滑动消耗 */
   private int[] mParentOffsetInWindow = new int[2];
-
+  /** 当前未消耗的部分 */
   private int mTotalUnconsumed = 0;
-
-  private IStyleStrategy mStrategy;
+  /** 处理不同Header的style的滑动行为策略，将具体的滑动处理，布局等抽离 */
+  protected IStyleStrategy mStrategy;
 
   /** 刷新状态process获取接口，可做动画 */
   public interface OnScrollStateChangeListener {
@@ -78,35 +91,8 @@ public class EasySwipeRefreshLayout extends ViewGroup
     super.onFinishInflate();
     mTargetView = getChildAt(0);
     buildHeaderView();
-
-    mStrategy = new MoveHeaderStrategy(this);
+    mTargetView.bringToFront();
   }
-
-  //<editor-fold desc="提供给StyleStrategy使用的方法">
-  public View getTargetView(){
-    return mTargetView;
-  }
-
-  public View getHeaderView(){
-    return mHeaderView;
-  }
-
-  public OnScrollStateChangeListener getProcessListener() {
-    return mProcessListener;
-  }
-
-  public OnRefreshListener getOnRefreshListener() {
-    return mOnRefreshListener;
-  }
-
-  public void setState(int state){
-    mState = state;
-  }
-
-  public int getState(){
-    return mState;
-  }
-  //<editor-fold>
 
   /**
    * 自定义HeaderView重写该方法
@@ -115,8 +101,9 @@ public class EasySwipeRefreshLayout extends ViewGroup
     if (mHeaderView == null) {
       mHeaderView = new DefaultHeaderView(getContext());
       setProcessListener((OnScrollStateChangeListener) mHeaderView);
-      addView(mHeaderView, 0);
+      addView(mHeaderView);
     }
+    mStrategy = new MoveHeaderStrategy(this);
   }
 
   @Override
@@ -171,10 +158,6 @@ public class EasySwipeRefreshLayout extends ViewGroup
     return mTargetView.canScrollVertically(-1);
   }
 
-  public void smoothScrollTo(int from, int to) {
-    mScroller.startScroll(0, from, 0, to - from, 500);
-    invalidate();
-  }
 
   @Override
   public void computeScroll() {
@@ -254,6 +237,40 @@ public class EasySwipeRefreshLayout extends ViewGroup
       mTotalUnconsumed = 0;
     }
     stopNestedScroll();
+  }
+  //<editor-fold>
+
+  //<editor-fold desc="提供给StyleStrategy使用的方法">
+  public View getTargetView() {
+    return mTargetView;
+  }
+
+  public View getHeaderView() {
+    return mHeaderView;
+  }
+
+  public OnScrollStateChangeListener getProcessListener() {
+    return mProcessListener;
+  }
+
+  public OnRefreshListener getOnRefreshListener() {
+    return mOnRefreshListener;
+  }
+
+  public void setState(int state) {
+    mState = state;
+  }
+
+  public int getState() {
+    return mState;
+  }
+
+  /**
+   * 给MoveHeaderStrategy使用，因为这里需要用到scroller，不好解耦
+   */
+  public void smoothScrollTo(int from, int to, int duration) {
+    mScroller.startScroll(0, from, 0, to - from, duration);
+    invalidate();
   }
   //<editor-fold>
 }

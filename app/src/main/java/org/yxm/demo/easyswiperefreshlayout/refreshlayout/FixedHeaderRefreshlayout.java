@@ -7,21 +7,21 @@ import com.airbnb.lottie.LottieAnimationView;
 import org.yxm.demo.easyswiperefreshlayout.R;
 import org.yxm.demo.widget.EasySwipeRefreshLayout;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
-
+import org.yxm.demo.widget.FixedHeaderStrategy;
 
 /**
  * 自定义HeaderView实例
  */
-public class EarthRefreshlayout extends EasySwipeRefreshLayout
+public class FixedHeaderRefreshlayout extends EasySwipeRefreshLayout
     implements OnScrollStateChangeListener {
 
   private LottieAnimationView mHeaderAnim;
 
-  public EarthRefreshlayout(Context context) {
-    super(context);
+  public FixedHeaderRefreshlayout(Context context) {
+    this(context, null);
   }
 
-  public EarthRefreshlayout(Context context, AttributeSet attrs) {
+  public FixedHeaderRefreshlayout(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
@@ -38,11 +38,15 @@ public class EarthRefreshlayout extends EasySwipeRefreshLayout
     mHeaderAnim.setAnimation("earth.json");
     mHeaderAnim.useHardwareAcceleration();
     mHeaderAnim.setRepeatCount(-1);
+    mStrategy = new FixedHeaderStrategy(this);
   }
 
 
   @Override
   public void onScrollStateChange(int state, int headerHeight, int scrollY) {
+    mHeaderAnim.setVisibility(VISIBLE);
+    float process = (float) (scrollY * 1.0 / headerHeight);
+    mHeaderAnim.setProgress(process);
     if (state == REFRESHING) {
       mHeaderAnim.playAnimation();
     }
@@ -52,6 +56,7 @@ public class EarthRefreshlayout extends EasySwipeRefreshLayout
   public void stopRefreshing() {
     super.stopRefreshing();
     mHeaderAnim.cancelAnimation();
+    mHeaderAnim.setVisibility(GONE);
   }
 
 }

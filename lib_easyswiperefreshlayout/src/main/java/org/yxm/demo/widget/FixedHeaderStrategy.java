@@ -4,11 +4,14 @@ import static org.yxm.demo.widget.EasySwipeRefreshLayout.RELEASE_TO_REFRESH;
 import static org.yxm.demo.widget.EasySwipeRefreshLayout.PULL_TO_REFRESH;
 import static org.yxm.demo.widget.EasySwipeRefreshLayout.REFRESHING;
 
+import android.util.Log;
 import android.view.View;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnRefreshListener;
 import org.yxm.demo.widget.EasySwipeRefreshLayout.OnScrollStateChangeListener;
 
-class FixedHeaderStrategy implements IStyleStrategy {
+public class FixedHeaderStrategy implements IStyleStrategy {
+
+  public static final String TAG = "FixedHeaderStrategy";
 
   private EasySwipeRefreshLayout mRefreshLayout;
   private View mTargetView;
@@ -85,12 +88,16 @@ class FixedHeaderStrategy implements IStyleStrategy {
 
   @Override
   public void smoothScrollToHeader() {
+    Log.d(TAG, "toHeader: headerHeight:"+mHeaderView.getHeight()+","
+        + "targetHeight:"+mTargetView.getHeight()+",layoutHeight:"+mRefreshLayout.getHeight());
     mTargetView.layout(0, mHeaderView.getHeight(), mTargetView.getWidth(),
         mRefreshLayout.getHeight());
   }
 
   @Override
   public void smoothScrollToReset() {
+    Log.d(TAG, "toReset: headerHeight:"+mHeaderView.getHeight()+","
+        + "targetHeight:"+mTargetView.getHeight()+",layoutHeight:"+mRefreshLayout.getHeight());
     mTargetView.layout(0, 0, mTargetView.getWidth(), mTargetView.getHeight());
   }
 
