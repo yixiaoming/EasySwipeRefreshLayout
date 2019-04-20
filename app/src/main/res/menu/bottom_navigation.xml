@@ -7,11 +7,11 @@
   <item
     android:id="@+id/action_rocket_fragment"
     android:icon="@drawable/ic_apps_black_24dp"
-    android:title="火箭"/>
+    android:title="移动Header"/>
   <item
     android:id="@+id/action_earth_fragment"
     android:icon="@drawable/ic_aspect_ratio_black_24dp"
-    android:title="地球"/>
+    android:title="固定Header"/>
   <item
     android:id="@+id/action_nest_fragment"
     android:icon="@drawable/ic_assessment_black_24dp"
