@@ -1,6 +1,6 @@
 # EasySwipeRefreshLayout
 
-## 简介
+## 1.简介
 
 Android下拉刷新控件，项目中主要包含两个module：
 
@@ -8,25 +8,25 @@ Android下拉刷新控件，项目中主要包含两个module：
 
 2. app（demo样例怎么通过EasySwipeRefreshLayout自定义自己的下拉刷新控件）
 
-## 效果展示
+## 2.效果展示
 
-### 1. 默认样式
+### 2.1 默认样式
 
 ![action1](/images/action1.gif)
 
-### 2. HeaderView一起下滑样式
+### 2.2 HeaderView一起下滑样式
 
 ![action2](/images/action2.gif)
 
-### 3. 头部固定样式
+### 2.3 头部固定样式
 
 ![action3](/images/action3.gif)
 
 ### 目前就支持两种样式，后期持续更新...
 
-## 代码说明
+## 3.代码说明
 
-### 核心类：EasySwipeRefreshLayout
+### 3.1 核心类：EasySwipeRefreshLayout
 
 继承于ViewGroup，将第一个子View作为target(RecyclerView等)监听滑动状态，进而控制HeaderView的行为。
 EasySwipeRefreshLayout做的工作主要是添加HeaderView，整体view的布局，以及向外传递滑动状态（做动画）。
@@ -41,7 +41,7 @@ EasySwipeRefreshLayout做的工作主要是添加HeaderView，整体view的布�
 
 具体处理用户交互，滑动位置，嵌套滑动等都由EasySwipeRefreshLayout处理。开发者只需要关心header的部分。
 
-### IStyleStrategy
+### 3.2 自定义Header下拉样式：IStyleStrategy
 
 通过抽象出策略接口，可以轻松扩展下拉的样式。目前支持:
 
@@ -51,7 +51,7 @@ EasySwipeRefreshLayout做的工作主要是添加HeaderView，整体view的布�
 
 如果要扩展可以参考这两种实现。
 
-### 实现方式
+### 3.3 实现方式
 
 EasySwipeRefreshLayout的实现方式不同于以往通过监听 **touchEvent** 的方式，而通过监听 **NestedScroll**
 的方式实现。具有以下优势：
@@ -73,7 +73,7 @@ EasySwipeRefreshLayout的实现方式不同于以往通过监听 **touchEvent** 
 PS：NestedScrollView包裹ListView的时候，只能显示一个item的问题。请将ListView替换为lib中提供的NestedListView
 具体原因请自行google。
 
-## 最后
+## 4.最后
 
 感谢你读到这里，本项目只是一个练手的项目，肯定还有很多不完善的地方，主要想解决平时在写下拉刷新的时候以及开源实现的一些问题，比如：
 
@@ -85,4 +85,5 @@ PS：NestedScrollView包裹ListView的时候，只能显示一个item的问题�
 
 4. 不够精简
 
+项目中用到的所有图片和动画都来自网络，如果不慎侵犯了你的权益，请及时告知立马删除。
 欢迎大家提issue以及帮忙改进项目，欢迎star和fork。持续更新中...
