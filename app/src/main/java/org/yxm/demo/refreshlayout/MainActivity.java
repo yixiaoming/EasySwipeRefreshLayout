@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import org.yxm.demo.refreshlayout.fragments.DefaultFragment;
 import org.yxm.demo.refreshlayout.fragments.FixedHeaderFragment;
 import org.yxm.demo.refreshlayout.fragments.MoveHeaderFragment;
+import org.yxm.demo.refreshlayout.fragments.NestedListFragment;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener {
 
@@ -47,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         selected = true;
         break;
       case R.id.action_nest_fragment:
-        break;
-      case R.id.action_style_fixed:
+        showFragment(NestedListFragment.class.getSimpleName());
+        selected = true;
         break;
     }
     return selected;
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         fragment = MoveHeaderFragment.newInstance();
       } else if (FixedHeaderFragment.class.getSimpleName().equals(fragmentTag)) {
         fragment = FixedHeaderFragment.newInstance();
+      } else if (NestedListFragment.class.getSimpleName().equals(fragmentTag)) {
+        fragment = NestedListFragment.newInstance();
       }
       ft.add(R.id.content, fragment, fragmentTag);
     }
